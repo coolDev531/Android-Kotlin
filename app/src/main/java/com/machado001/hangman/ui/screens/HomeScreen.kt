@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -20,22 +19,58 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.machado001.hangman.R
 import com.machado001.hangman.ui.theme.HangmanTheme
 
+
 @Composable
-fun Home(modifier: Modifier = Modifier) {
+fun MyAppNavHost(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+    startDestination: String = "Home"
+) {
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = startDestination
+    ) {
+        composable("Home") {
+            Home(
+                onNavigateToGame = { navController.navigate("Game") },
+            )
+        }
+        composable("Game") {
+            GameScreen()
+        }
+    }
+}
+
+@Composable
+fun Home(
+    modifier: Modifier = Modifier,
+    onNavigateToGame: () -> Unit = {}
+) {
+
     Box(modifier = modifier.fillMaxSize() ){
-        CenterDiv(modifier = modifier.align(Alignment.Center))
+        CenterDiv(
+            modifier = modifier.align(
+                Alignment.Center
+            ),
+            onNavigateToGame = onNavigateToGame
+        )
 
     }
 }
 
 @Composable
-fun CenterDiv(modifier: Modifier = Modifier){
+fun CenterDiv(modifier: Modifier = Modifier,
+              onNavigateToGame: () -> Unit
+){
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -48,7 +83,9 @@ fun CenterDiv(modifier: Modifier = Modifier){
         )
         Row(modifier = modifier.padding(16.dp)){
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    onNavigateToGame()
+                },
                 modifier = modifier.padding(end = 16.dp),
                 elevation = ButtonDefaults.buttonElevation(16.dp)
             ) {
