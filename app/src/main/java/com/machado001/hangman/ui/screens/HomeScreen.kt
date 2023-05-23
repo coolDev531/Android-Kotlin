@@ -32,20 +32,24 @@ import com.machado001.hangman.ui.theme.HangmanTheme
 fun MyAppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = "Home"
+    startDestination: String = "home"
 ) {
     NavHost(
         modifier = modifier,
         navController = navController,
         startDestination = startDestination
     ) {
-        composable("Home") {
+        composable("home") {
             Home(
-                onNavigateToGame = { navController.navigate("Game") },
+                onNavigateToGame = { navController.navigate("game") },
+                onNavigateToSettings = {navController.navigate("settings")}
             )
         }
-        composable("Game") {
+        composable("game") {
             GameScreen()
+        }
+        composable("settings") {
+            SettingsScreen()
         }
     }
 }
@@ -53,15 +57,16 @@ fun MyAppNavHost(
 @Composable
 fun Home(
     modifier: Modifier = Modifier,
-    onNavigateToGame: () -> Unit = {}
+    onNavigateToGame: () -> Unit = {},
+    onNavigateToSettings: () -> Unit = {}
 ) {
 
     Box(modifier = modifier.fillMaxSize() ){
         CenterDiv(
-            modifier = modifier.align(
-                Alignment.Center
-            ),
-            onNavigateToGame = onNavigateToGame
+            modifier = modifier
+                .align(Alignment.Center),
+            onNavigateToGame = onNavigateToGame,
+            onNavigateToSettings = onNavigateToSettings
         )
 
     }
@@ -69,7 +74,8 @@ fun Home(
 
 @Composable
 fun CenterDiv(modifier: Modifier = Modifier,
-              onNavigateToGame: () -> Unit
+              onNavigateToGame: () -> Unit,
+              onNavigateToSettings: () -> Unit = {}
 ){
     Column(
         modifier = modifier,
@@ -92,7 +98,7 @@ fun CenterDiv(modifier: Modifier = Modifier,
                 Text(text = "Jogar")
             }
             OutlinedButton(
-                onClick = { /*TODO */ }
+                onClick = { onNavigateToSettings() }
             ) {
                 Text(text = "Configurações")
             }
