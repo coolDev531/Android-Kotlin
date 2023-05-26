@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hangman"
         tools:targetApi="31">
+
         <activity
             android:screenOrientation="landscape"
             android:name=".MainActivity"

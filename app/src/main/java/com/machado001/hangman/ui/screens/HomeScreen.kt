@@ -41,12 +41,13 @@ fun MyAppNavHost(
     ) {
         composable("home") {
             Home(
+                modifier = modifier,
                 onNavigateToGame = { navController.navigate("game") },
                 onNavigateToSettings = {navController.navigate("settings")}
             )
         }
         composable("game") {
-            GameScreen()
+            GameScreen(modifier = modifier)
         }
         composable("settings") {
             SettingsScreen()
