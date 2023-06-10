@@ -1,6 +1,15 @@
 package com.machado001.hangman.ui.screens
 
+
 data class GameUiState(
     val wordRandomlyChosen: String = "",
-    val keyboardKeys:String = ""
+    val usedLetters: Set<Char> = emptySet(),
+    val correctLetters: Set<Char> = emptySet(),
+    val wrongLetters: Set<Char> = emptySet(),
+    val selectedLetters: Set<Char> = emptySet(),
+    val livesLeft: Int = 4,
 )
+
+val alphabetSet = "QWERTYUIOPASDFGHJKLZXCVBNM".toList()
+
+

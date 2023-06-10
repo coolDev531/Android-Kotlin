@@ -20,40 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.machado001.hangman.R
 import com.machado001.hangman.ui.theme.HangmanTheme
 
-
-@Composable
-fun MyAppNavHost(
-    modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
-    startDestination: String = "home"
-) {
-    NavHost(
-        modifier = modifier,
-        navController = navController,
-        startDestination = startDestination
-    ) {
-        composable("home") {
-            Home(
-                modifier = modifier,
-                onNavigateToGame = { navController.navigate("game") },
-                onNavigateToSettings = {navController.navigate("settings")}
-            )
-        }
-        composable("game") {
-            GameScreen(modifier = modifier)
-        }
-        composable("settings") {
-            SettingsScreen()
-        }
-    }
-}
 
 @Composable
 fun Home(
