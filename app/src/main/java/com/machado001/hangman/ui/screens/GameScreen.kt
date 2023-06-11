@@ -54,11 +54,14 @@ fun GameScreen(
     }
 
     GameContent(
+        wrongLetters = gameUiState.wrongLetters,
         wordChosen = gameUiState.wordRandomlyChosen,
-        usedLetters = gameUiState.usedLetters,
         correctLetters = gameUiState.correctLetters,
         livesCount = gameUiState.livesLeft,
-        checkUserGuess = { gameViewModel.checkUserGuess(it) }
+        checkUserGuess = { gameViewModel.checkUserGuess(it) },
+        resetGame = { gameViewModel.resetGame() },
+        isGameOver = gameViewModel.isGameOver,
+        usedLetters = gameUiState.usedLetters
     )
 
 }
@@ -67,12 +70,14 @@ fun GameScreen(
 @Composable
 private fun GameContent(
     wordChosen: String,
-    usedLetters: Set<Char>,
     correctLetters: Set<Char>,
+    wrongLetters: Set<Char>,
     livesCount: Int,
-    checkUserGuess: (Char) -> Unit
+    checkUserGuess: (Char) -> Unit,
+    resetGame: () -> Unit,
+    isGameOver: Boolean,
+    usedLetters: Set<Char>
 ) {
-
 
     Column(
         modifier = Modifier
@@ -87,10 +92,6 @@ private fun GameContent(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            UsedLetters(
-                usedLetters,
-                correctLetters,
-            )
             LivesLeftRow(livesCount = livesCount)
         }
         LazyRow(
@@ -110,10 +111,17 @@ private fun GameContent(
         KeyboardLayout(
             alphabetList = alphabetSet.toList(),
             checkUserGuess = { checkUserGuess(it) },
-            correctLetters = correctLetters
+            correctLetters = correctLetters,
+            usedLetters = usedLetters,
+            wrongLetters = wrongLetters
         )
     }
+
+    if (isGameOver) {
+        GameOverDialog(resetGame = resetGame, correctLetters, wrongLetters, wordChosen)
+    }
 }
+
 
 @Composable
 @Stable
@@ -140,14 +148,15 @@ private fun LetterFromWord(
     ) {
         key(letter) {
             Text(
-                text = letter.toString(),
+                text = letter.toString().uppercase(),
                 modifier = Modifier
                     .padding(4.dp)
                     .alpha(
                         if (correctLetters.contains(letter)) 1f else 0f
                     ),
                 color = MaterialTheme.colorScheme.inversePrimary,
-                fontSize = 24.sp
+                fontSize = 24.sp,
+                style = MaterialTheme.typography.labelMedium
             )
         }
     }
@@ -178,41 +187,12 @@ private fun LivesLeftRow(
 
 
 @Composable
-private fun UsedLetters(
-    usedLetters: Set<Char>,
-    correctLetters: Set<Char>,
-) {
-    Row {
-        Text(
-            text = "Used letters: ".uppercase(),
-            style = MaterialTheme.typography.labelSmall
-
-        )
-        if (usedLetters.isNotEmpty()) {
-            Row {
-                for (letter in usedLetters.toList()) {
-                    Text(
-                        text = letter.toString(),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = if (correctLetters.contains(letter.lowercaseChar())) {
-                            Color.Green
-                        } else {
-                            Color.Red
-                        }
-                    )
-                    Spacer(modifier = Modifier.padding(end = 4.dp))
-                }
-            }
-        }
-    }
-}
-
-
-@Composable
 private fun KeyboardLayout(
     checkUserGuess: (Char) -> Unit,
     alphabetList: List<Char>,
-    correctLetters: Set<Char>
+    correctLetters: Set<Char>,
+    usedLetters: Set<Char>,
+    wrongLetters: Set<Char>
 ) {
 
     LazyVerticalGrid(
@@ -223,9 +203,12 @@ private fun KeyboardLayout(
 
         ) {
         items(alphabetList.size) {
-            val keyLetter = alphabetList[it].uppercaseChar()
+            val keyLetter = alphabetList[it]
             KeyboardKey(
-                letterFromButton = keyLetter, correctLetters = correctLetters
+                letterFromButton = keyLetter,
+                correctLetters = correctLetters,
+                usedLetters = usedLetters,
+                wrongLetters = wrongLetters
             ) {
                 checkUserGuess(keyLetter)
             }
@@ -239,19 +222,21 @@ private fun KeyboardKey(
     modifier: Modifier = Modifier,
     letterFromButton: Char,
     correctLetters: Set<Char>,
+    wrongLetters: Set<Char>,
+    usedLetters: Set<Char>,
     checkUserGuess: (Char) -> Unit
 ) {
-    var isEnabled by remember { mutableStateOf(true) }
 
-    val checkCorrectness = correctLetters.contains(letterFromButton)
+    val isEnabled = !usedLetters.contains(letterFromButton)
 
+
+    val checkCorrectness = correctLetters.contains(letterFromButton.lowercaseChar())
     TextButton(
         onClick = {
             checkUserGuess(letterFromButton)
-            isEnabled = false
         },
         enabled = isEnabled,
-        shape = RoundedCornerShape(1f),
+        shape = RoundedCornerShape(percent = 50),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Blue,
             contentColor = Color.White,

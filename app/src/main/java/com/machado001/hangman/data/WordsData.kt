@@ -250,3 +250,5 @@ val allWords: Set<String> =
         "zone",
         "zeal"
     )
+
+val allWordsUpperCase = allWords.map { it.uppercase() }.toSet()

@@ -8,8 +8,9 @@ data class GameUiState(
     val wrongLetters: Set<Char> = emptySet(),
     val selectedLetters: Set<Char> = emptySet(),
     val livesLeft: Int = 4,
+    val isGameOver: Boolean = false
 )
 
-val alphabetSet = "QWERTYUIOPASDFGHJKLZXCVBNM".toList()
+val alphabetSet = "QWERTYUIOPASDFGHJKLZXCVBNM".toSet()
 
 

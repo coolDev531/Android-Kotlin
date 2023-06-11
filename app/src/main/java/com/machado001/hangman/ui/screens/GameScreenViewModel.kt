@@ -14,8 +14,12 @@ class GameScreenViewModel : ViewModel() {
     private var correctLetters: MutableSet<Char> = mutableSetOf()
     private var wrongLetters: MutableSet<Char> = mutableSetOf()
 
+    private var _currentLetterGuessed: Char = ' '
 
-   private var _currentLetterGuessed: Char = '_'
+    private var _isGameOver: Boolean = false
+    val isGameOver: Boolean
+        get() = _uiState.value.livesLeft == 0
+
 
     fun pickRandomWord() {
         val currentWord = allWords.random()
@@ -33,11 +37,11 @@ class GameScreenViewModel : ViewModel() {
 
     fun checkUserGuess(letterFromButton: Char) {
         lettersGuessed.add(letterFromButton)
+        _currentLetterGuessed = letterFromButton.lowercaseChar()
 
         if (isGuessCorrect(letterFromButton)) {
-            _currentLetterGuessed = letterFromButton.lowercaseChar()
-
             correctLetters.add(_currentLetterGuessed)
+
             _uiState.update { currentState ->
                 currentState.copy(
                     usedLetters = lettersGuessed.toSet(),
@@ -45,7 +49,8 @@ class GameScreenViewModel : ViewModel() {
                 )
             }
         } else {
-            wrongLetters.add(letterFromButton)
+            wrongLetters.add(_currentLetterGuessed)
+
             _uiState.update { currentState ->
                 currentState.copy(
                     usedLetters = lettersGuessed.toSet(),
@@ -55,4 +60,15 @@ class GameScreenViewModel : ViewModel() {
             }
         }
     }
+
+    fun resetGame() {
+        lettersGuessed.clear()
+        correctLetters.clear()
+        wrongLetters.clear()
+        _currentLetterGuessed = '_'
+        _isGameOver = false
+        _uiState.value = GameUiState()
+        pickRandomWord()// Reset the entire UI state object
+    }
+
 }
