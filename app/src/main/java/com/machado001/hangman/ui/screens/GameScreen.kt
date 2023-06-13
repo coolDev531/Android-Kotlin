@@ -1,25 +1,22 @@
 package com.machado001.hangman.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -28,15 +25,15 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,12 +55,11 @@ fun GameScreen(
         wordChosen = gameUiState.wordRandomlyChosen,
         correctLetters = gameUiState.correctLetters,
         livesCount = gameUiState.livesLeft,
-        checkUserGuess = { gameViewModel.checkUserGuess(it) },
+        ignoredCheckUserGuess = { gameViewModel.checkUserGuess(it) },
         resetGame = { gameViewModel.resetGame() },
         isGameOver = gameViewModel.isGameOver,
         usedLetters = gameUiState.usedLetters
     )
-
 }
 
 
@@ -73,7 +69,7 @@ private fun GameContent(
     correctLetters: Set<Char>,
     wrongLetters: Set<Char>,
     livesCount: Int,
-    checkUserGuess: (Char) -> Unit,
+    ignoredCheckUserGuess: (Char) -> Unit,
     resetGame: () -> Unit,
     isGameOver: Boolean,
     usedLetters: Set<Char>
@@ -92,49 +88,45 @@ private fun GameContent(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            LivesLeftRow(livesCount = livesCount)
+            LivesLeftRow(livesCount)
         }
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            horizontalArrangement = Arrangement.Center,
-            state = LazyListState(firstVisibleItemIndex = 1)
-        ) {
-            items(
-                wordChosen.length,
-                key = { it }
-            ) { index ->
-                LetterFromWord(wordChosen[index], correctLetters)
-            }
-        }
+        WordChosenLazyRow(
+            wordChosen,
+            correctLetters
+        )
         KeyboardLayout(
             alphabetList = alphabetSet.toList(),
-            checkUserGuess = { checkUserGuess(it) },
+            checkUserGuess = { ignoredCheckUserGuess(it) },
             correctLetters = correctLetters,
             usedLetters = usedLetters,
-            wrongLetters = wrongLetters
         )
     }
 
     if (isGameOver) {
         GameOverDialog(resetGame = resetGame, correctLetters, wrongLetters, wordChosen)
     }
+    println(wordChosen)
+    if (correctLetters.containsAll(wordChosen.toList())) {
+        resetGame()
+    }
+
+
 }
 
-
 @Composable
-@Stable
-private fun LetterFromWord(
-    letter: Char,
+private fun WordChosenLazyRow(
+    wordChosen: String,
     correctLetters: Set<Char>
 ) {
-
-    Box(
+    LazyRow(
         modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 20.dp),
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        val letterFromWordBoxModifier = Modifier
             .defaultMinSize(40.dp)
             .padding(end = 8.dp)
-            .background(color = MaterialTheme.colorScheme.surface)
             .drawWithContent {
                 drawContent()
                 drawLine(
@@ -143,17 +135,39 @@ private fun LetterFromWord(
                     end = Offset(size.width, size.height),
                     strokeWidth = 4.dp.toPx()
                 )
-            },
+            }
+        items(
+            wordChosen.length,
+            key = { it }
+        ) { index ->
+            LetterFromWord(
+                modifier = letterFromWordBoxModifier,
+                wordChosen[index],
+                correctLetters
+            )
+        }
+    }
+}
+
+
+@Composable
+@Stable
+private fun LetterFromWord(
+    modifier: Modifier = Modifier,
+    letter: Char,
+    correctLetters: Set<Char>
+) {
+
+    Box(
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         key(letter) {
             Text(
-                text = letter.toString().uppercase(),
                 modifier = Modifier
                     .padding(4.dp)
-                    .alpha(
-                        if (correctLetters.contains(letter)) 1f else 0f
-                    ),
+                    .alpha(if (correctLetters.contains(letter)) 1f else 0f),
+                text = letter.toString().uppercase(),
                 color = MaterialTheme.colorScheme.inversePrimary,
                 fontSize = 24.sp,
                 style = MaterialTheme.typography.labelMedium
@@ -168,7 +182,7 @@ private fun LivesLeftRow(
     livesCount: Int
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = CenterVertically
     ) {
         Text(
             text = "Lives remaining: ".uppercase(),
@@ -192,25 +206,22 @@ private fun KeyboardLayout(
     alphabetList: List<Char>,
     correctLetters: Set<Char>,
     usedLetters: Set<Char>,
-    wrongLetters: Set<Char>
 ) {
-
     LazyVerticalGrid(
         columns = GridCells.Adaptive(40.dp),
         modifier = Modifier
+            .padding(16.dp)
             .fillMaxWidth()
-            .padding(16.dp),
-
-        ) {
+    ) {
         items(alphabetList.size) {
             val keyLetter = alphabetList[it]
-            KeyboardKey(
-                letterFromButton = keyLetter,
-                correctLetters = correctLetters,
-                usedLetters = usedLetters,
-                wrongLetters = wrongLetters
-            ) {
-                checkUserGuess(keyLetter)
+            key(it) {
+                KeyboardKey(
+                    letterFromButton = keyLetter,
+                    correctLetters = correctLetters,
+                    usedLetters = usedLetters,
+                    checkUserGuess = { checkUserGuess(keyLetter) }
+                )
             }
         }
     }
@@ -222,21 +233,22 @@ private fun KeyboardKey(
     modifier: Modifier = Modifier,
     letterFromButton: Char,
     correctLetters: Set<Char>,
-    wrongLetters: Set<Char>,
     usedLetters: Set<Char>,
     checkUserGuess: (Char) -> Unit
 ) {
 
-    val isEnabled = !usedLetters.contains(letterFromButton)
-
-
-    val checkCorrectness = correctLetters.contains(letterFromButton.lowercaseChar())
+    val isEnabled =
+        remember(letterFromButton, usedLetters) { !usedLetters.contains(letterFromButton) }
+    val checkCorrectness = remember(
+        letterFromButton,
+        correctLetters
+    ) { correctLetters.contains(letterFromButton.lowercaseChar()) }
     TextButton(
         onClick = {
             checkUserGuess(letterFromButton)
         },
         enabled = isEnabled,
-        shape = RoundedCornerShape(percent = 50),
+        shape = ShapeDefaults.ExtraLarge,
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Blue,
             contentColor = Color.White,
@@ -244,18 +256,16 @@ private fun KeyboardKey(
             disabledContentColor = if (checkCorrectness) Color.Black else Color.Yellow
         ),
         modifier = modifier
-            .padding(4.dp)
-            .alpha(if (isEnabled) 1f else 0.12f),
+            .alpha(if (isEnabled) 1f else 0.12f)
+            .padding(4.dp),
     ) {
-        Box(
+        Text(
+            text = letterFromButton.toString(),
+            style = MaterialTheme.typography.labelMedium,
             modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Text(
-                text = letterFromButton.toString(),
-                style = MaterialTheme.typography.labelMedium
-            )
-        }
+                .fillMaxSize(),
+            textAlign = TextAlign.Center
+        )
     }
 }
 

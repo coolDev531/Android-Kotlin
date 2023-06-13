@@ -26,7 +26,7 @@ fun GameOverDialog(
     wordChosen: String
 ) {
     AlertDialog(
-        title = { Text(text = "GAME OVER FUDIDO!") },
+        title = { Text(text = "GAME OVER!") },
         text = { DialogContentColumn(correctLetters, wrongLetters, wordChosen) },
         onDismissRequest = { resetGame() },
         confirmButton = {

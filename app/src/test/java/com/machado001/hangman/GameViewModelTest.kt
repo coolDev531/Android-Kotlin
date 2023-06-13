@@ -13,9 +13,8 @@ import org.junit.Assert.*
 class GameScreenViewModelTest {
     private val viewModel = GameScreenViewModel()
 
-
     @Test
-    fun gameScreenViewModel_PickRandomWord_WordChosenIsNotEmpty() {
+    fun gameScreenViewModel_PickRandomWord_NewWorldPicked() {
         viewModel.pickRandomWord()
         val wordChosen = viewModel.uiState.value.wordRandomlyChosen
         assertTrue(wordChosen.isNotEmpty())
@@ -45,7 +44,6 @@ class GameScreenViewModelTest {
     fun gameScreenViewModel_GameOver_LivesLeftIsZero() {
         viewModel.pickRandomWord()
         val wordChosen = viewModel.uiState.value.wordRandomlyChosen
-
         val incorrectLetters = alphabetSet.filter { !wordChosen.contains(it, ignoreCase = true) }
 
         var currentLives = viewModel.uiState.value.livesLeft
@@ -76,7 +74,6 @@ class GameScreenViewModelTest {
         assertTrue(uiState.usedLetters.isEmpty())
         assertTrue(uiState.correctLetters.isEmpty())
         assertTrue(uiState.wrongLetters.isEmpty())
-        assertTrue(uiState.selectedLetters.isEmpty())
         assertEquals(livesLeft, uiState.livesLeft)
         assertFalse(uiState.isGameOver)
     }

@@ -6,8 +6,7 @@ data class GameUiState(
     val usedLetters: Set<Char> = emptySet(),
     val correctLetters: Set<Char> = emptySet(),
     val wrongLetters: Set<Char> = emptySet(),
-    val selectedLetters: Set<Char> = emptySet(),
-    val livesLeft: Int = 4,
+    val livesLeft: Int = 5,
     val isGameOver: Boolean = false
 )
 
