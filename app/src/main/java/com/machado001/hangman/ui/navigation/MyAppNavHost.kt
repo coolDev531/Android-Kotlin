@@ -14,25 +14,33 @@ import com.machado001.hangman.ui.screens.SettingsScreen
 fun MyAppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = "home"
+    startDestination: String = Destinations.Home.name
 ) {
+    val gameRoute = Destinations.Game.name
+    val settingsRoute = Destinations.Settings.name
     NavHost(
         modifier = modifier,
         navController = navController,
         startDestination = startDestination
     ) {
-        composable("home") {
+        composable(startDestination) {
             Home(
                 modifier = modifier,
-                onNavigateToGame = { navController.navigate("game") },
-                onNavigateToSettings = {navController.navigate("settings")}
+                onNavigateToGame = { navController.navigate(gameRoute) },
+                onNavigateToSettings = { navController.navigate(settingsRoute) }
             )
         }
-        composable("game") {
+        composable(gameRoute) {
             GameScreen()
         }
-        composable("settings") {
+        composable(settingsRoute) {
             SettingsScreen()
         }
     }
+}
+
+enum class Destinations {
+    Home,
+    Settings,
+    Game,
 }

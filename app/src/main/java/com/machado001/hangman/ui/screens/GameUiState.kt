@@ -7,7 +7,8 @@ data class GameUiState(
     val correctLetters: Set<Char> = emptySet(),
     val wrongLetters: Set<Char> = emptySet(),
     val livesLeft: Int = 5,
-    val isGameOver: Boolean = false
+    val isGameOver: Boolean = false,
+    val streakCount: Int = 0
 )
 
 val alphabetSet = "QWERTYUIOPASDFGHJKLZXCVBNM".toSet()

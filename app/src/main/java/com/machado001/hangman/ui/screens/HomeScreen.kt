@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.machado001.hangman.R
@@ -31,7 +29,7 @@ fun Home(
     onNavigateToSettings: () -> Unit = {}
 ) {
 
-    Box(modifier = modifier.fillMaxSize() ){
+    Box(modifier = modifier.fillMaxSize()) {
         CenterDiv(
             modifier = modifier
                 .align(Alignment.Center),
@@ -43,34 +41,37 @@ fun Home(
 }
 
 @Composable
-fun CenterDiv(modifier: Modifier = Modifier,
-              onNavigateToGame: () -> Unit,
-              onNavigateToSettings: () -> Unit = {}
-){
+fun CenterDiv(
+    modifier: Modifier = Modifier,
+    onNavigateToGame: () -> Unit,
+    onNavigateToSettings: () -> Unit = {}
+) {
+    val paddingValue = 16.dp
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "" )
-        Text(
-            text = stringResource(id = R.string.app_name).uppercase(),
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Black,
+        Image(
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            contentDescription = ""
         )
-        Row(modifier = modifier.padding(16.dp)){
+        Text(
+            text = stringResource(id = R.string.APP_NAME).uppercase(),
+        )
+        Row(modifier = modifier.padding(paddingValue)) {
             Button(
                 onClick = {
                     onNavigateToGame()
                 },
-                modifier = modifier.padding(end = 16.dp),
-                elevation = ButtonDefaults.buttonElevation(16.dp)
+                modifier = modifier.padding(end = paddingValue),
+                elevation = ButtonDefaults.buttonElevation(paddingValue)
             ) {
-                Text(text = "Jogar")
+                Text(text = stringResource(id = R.string.PLAY_BUTTON).uppercase())
             }
             OutlinedButton(
                 onClick = { onNavigateToSettings() }
             ) {
-                Text(text = "Configurações")
+                Text(text = stringResource(id = R.string.SETTINGS_BUTTON).uppercase())
             }
         }
     }

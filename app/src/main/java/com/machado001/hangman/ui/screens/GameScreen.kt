@@ -1,13 +1,19 @@
 package com.machado001.hangman.ui.screens
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -27,7 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawWithContent
@@ -51,14 +57,14 @@ fun GameScreen(
     }
 
     GameContent(
-        wrongLetters = gameUiState.wrongLetters,
         wordChosen = gameUiState.wordRandomlyChosen,
         correctLetters = gameUiState.correctLetters,
         livesCount = gameUiState.livesLeft,
         ignoredCheckUserGuess = { gameViewModel.checkUserGuess(it) },
-        resetGame = { gameViewModel.resetGame() },
+        resetGame = { gameViewModel.resetStates() },
         isGameOver = gameViewModel.isGameOver,
-        usedLetters = gameUiState.usedLetters
+        usedLetters = gameUiState.usedLetters,
+        updateStreakCount = { gameViewModel.updateStreakCount(gameUiState.streakCount) }
     )
 }
 
@@ -67,138 +73,169 @@ fun GameScreen(
 private fun GameContent(
     wordChosen: String,
     correctLetters: Set<Char>,
-    wrongLetters: Set<Char>,
     livesCount: Int,
     ignoredCheckUserGuess: (Char) -> Unit,
     resetGame: () -> Unit,
     isGameOver: Boolean,
-    usedLetters: Set<Char>
+    usedLetters: Set<Char>,
+    updateStreakCount: () -> Unit
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-
-        ) {
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            LivesLeftRow(livesCount)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                contentAlignment = Center
+            ) {
+                LivesLeftRow(livesCount)
+            }
+
         }
-        WordChosenLazyRow(
-            wordChosen,
-            correctLetters
-        )
-        KeyboardLayout(
-            alphabetList = alphabetSet.toList(),
-            checkUserGuess = { ignoredCheckUserGuess(it) },
-            correctLetters = correctLetters,
-            usedLetters = usedLetters,
-        )
+        Box {
+            ChosenWordLazyRow(
+                wordChosen,
+                correctLetters
+            )
+        }
+        Box {
+            KeyboardLayout(
+                alphabetList = alphabetSet.toList(),
+                checkUserGuess = { ignoredCheckUserGuess(it) },
+                correctLetters = correctLetters,
+                usedLetters = usedLetters,
+            )
+        }
     }
+    val isWordCorrectlyGuessed = correctLetters.containsAll(wordChosen.toList())
 
     if (isGameOver) {
-        GameOverDialog(resetGame = resetGame, correctLetters, wrongLetters, wordChosen)
-    }
-    println(wordChosen)
-    if (correctLetters.containsAll(wordChosen.toList())) {
-        resetGame()
+        GameOverDialog(
+            resetGame = resetGame,
+            wordChosen = wordChosen,
+        )
     }
 
+    if (isWordCorrectlyGuessed) {
+        updateStreakCount()
+    }
 
 }
 
 @Composable
-private fun WordChosenLazyRow(
+private fun ChosenWordLazyRow(
     wordChosen: String,
     correctLetters: Set<Char>
 ) {
+    // This composable displays the chosen word in a LazyRow. Each letter is represented by a box.
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 20.dp),
         horizontalArrangement = Arrangement.Center,
     ) {
-        val letterFromWordBoxModifier = Modifier
-            .defaultMinSize(40.dp)
-            .padding(end = 8.dp)
-            .drawWithContent {
-                drawContent()
-                drawLine(
-                    color = Color.Black,
-                    start = Offset(1f, size.height),
-                    end = Offset(size.width, size.height),
-                    strokeWidth = 4.dp.toPx()
-                )
-            }
         items(
             wordChosen.length,
+            contentType = { it },
             key = { it }
         ) { index ->
-            LetterFromWord(
+            WordLetter(
                 modifier = letterFromWordBoxModifier,
-                wordChosen[index],
+                letter = wordChosen[index],
                 correctLetters
             )
         }
     }
 }
 
+val letterFromWordBoxModifier = Modifier
+    .padding(end = 2.4.dp)
+    .drawWithContent {
+        drawContent()
+        drawLine(
+            color = Color.Black,
+            start = Offset(1f, size.height),
+            end = Offset(size.width, size.height),
+            strokeWidth = 4.dp.toPx()
+        )
+    }
+
+// Constants
+private const val ALPHA_CORRECT_VALUE = 1F
+private const val LETTER_ALPHA_INCORRECT = 0F
+private val LETTER_PADDING = 4.dp
+private val LETTER_FONT_SIZE = 24.sp
+private const val BUTTON_VISIBLE_FLOAT_VALUE = 1F
+private const val BUTTON_TRANSLUCENT_FLOAT_VALUE = 0.48F
 
 @Composable
 @Stable
-private fun LetterFromWord(
+private fun WordLetter(
     modifier: Modifier = Modifier,
     letter: Char,
     correctLetters: Set<Char>
 ) {
+    val isLetterCorrect = correctLetters.contains(letter)
+    val alphaValue = if (isLetterCorrect) ALPHA_CORRECT_VALUE else LETTER_ALPHA_INCORRECT
 
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        contentAlignment = Center
     ) {
-        key(letter) {
-            Text(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .alpha(if (correctLetters.contains(letter)) 1f else 0f),
-                text = letter.toString().uppercase(),
-                color = MaterialTheme.colorScheme.inversePrimary,
-                fontSize = 24.sp,
-                style = MaterialTheme.typography.labelMedium
-            )
-        }
+        Text(
+            modifier = Modifier
+                .padding(LETTER_PADDING)
+                .alpha(alphaValue),
+            text = letter.toString().uppercase(),
+            color = MaterialTheme.colorScheme.inversePrimary,
+            fontSize = LETTER_FONT_SIZE,
+            style = MaterialTheme.typography.labelMedium
+        )
     }
 }
 
-
 @Composable
-private fun LivesLeftRow(
-    livesCount: Int
-) {
-    Row(
-        verticalAlignment = CenterVertically
-    ) {
-        Text(
-            text = "Lives remaining: ".uppercase(),
-            style = MaterialTheme.typography.labelMedium
-        )
+private fun LivesLeftRow(livesCount: Int) {
+    Row {
         repeat(livesCount) {
+            val infiniteTransition = rememberInfiniteTransition()
+
+            val pulsate by infiniteTransition.animateFloat(
+                initialValue = 35f,
+                targetValue = 37f,
+                animationSpec = infiniteRepeatable(
+                    animation = keyframes {
+                        durationMillis = 4000
+                        35f at 0 with LinearEasing
+                        37f at 200 with LinearEasing
+                        35f at 400 with LinearEasing
+                        37f at 600 with LinearEasing
+                        35f at 800 with LinearEasing
+                        35f at 4000 with LinearEasing
+                    },
+                    repeatMode = RepeatMode.Restart
+                ),
+            )
+
             Icon(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = "Lives Player Count",
                 tint = Color.Red,
                 modifier = Modifier
+                    .requiredSize(pulsate.dp)
             )
         }
     }
 }
-
 
 @Composable
 private fun KeyboardLayout(
@@ -236,7 +273,6 @@ private fun KeyboardKey(
     usedLetters: Set<Char>,
     checkUserGuess: (Char) -> Unit
 ) {
-
     val isEnabled =
         remember(letterFromButton, usedLetters) { !usedLetters.contains(letterFromButton) }
     val checkCorrectness = remember(
@@ -250,13 +286,10 @@ private fun KeyboardKey(
         enabled = isEnabled,
         shape = ShapeDefaults.ExtraLarge,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Blue,
-            contentColor = Color.White,
             disabledContainerColor = if (checkCorrectness) Color.Green else Color.Red,
-            disabledContentColor = if (checkCorrectness) Color.Black else Color.Yellow
         ),
         modifier = modifier
-            .alpha(if (isEnabled) 1f else 0.12f)
+            .alpha(if (isEnabled) BUTTON_VISIBLE_FLOAT_VALUE else BUTTON_TRANSLUCENT_FLOAT_VALUE)
             .padding(4.dp),
     ) {
         Text(
@@ -272,7 +305,7 @@ private fun KeyboardKey(
 
 @Preview
 @Composable
-fun Sexo() {
+fun GameScreenPreview() {
     HangmanTheme(darkTheme = true) {
         GameScreen()
     }

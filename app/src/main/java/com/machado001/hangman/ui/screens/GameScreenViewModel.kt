@@ -17,8 +17,9 @@ class GameScreenViewModel : ViewModel() {
     private var _currentLetterGuessed: Char = ' '
 
     private var _isGameOver: Boolean = false
-    val isGameOver: Boolean
-        get() = _uiState.value.livesLeft == 0
+    val isGameOver: Boolean get() = _uiState.value.livesLeft == 0
+
+    private var currentStreakCount: Int = 0
 
 
     fun pickRandomWord() {
@@ -28,7 +29,7 @@ class GameScreenViewModel : ViewModel() {
         }
     }
 
-    private fun isGuessCorrect(letterFromButton: Char): Boolean {
+    private fun isLetterGuessCorrect(letterFromButton: Char): Boolean {
         return _uiState.value.wordRandomlyChosen.contains(
             char = letterFromButton,
             ignoreCase = true
@@ -39,7 +40,7 @@ class GameScreenViewModel : ViewModel() {
         lettersGuessed.add(letterFromButton)
         _currentLetterGuessed = letterFromButton.lowercaseChar()
 
-        if (isGuessCorrect(letterFromButton)) {
+        if (isLetterGuessCorrect(letterFromButton)) {
             correctLetters.add(_currentLetterGuessed)
 
             _uiState.update { currentState ->
@@ -61,14 +62,23 @@ class GameScreenViewModel : ViewModel() {
         }
     }
 
-    fun resetGame() {
+    fun resetStates() {
+        val currentStreakCount = _uiState.value.streakCount // Salva o valor atual do streakCount
+        _uiState.value = GameUiState(streakCount = currentStreakCount) // Cria um novo GameUiState com o valor do streakCount preservado
         lettersGuessed.clear()
         correctLetters.clear()
         wrongLetters.clear()
-        _currentLetterGuessed = '_'
+        _currentLetterGuessed = ' '
         _isGameOver = false
-        _uiState.value = GameUiState()
-        pickRandomWord()// Reset the entire UI state object
+        pickRandomWord()
     }
 
+    fun updateStreakCount(streakCount: Int) {
+        resetStates()
+        _uiState.update { currentState ->
+            currentState.copy(
+                streakCount = streakCount.inc()
+            )
+        }
+    }
 }

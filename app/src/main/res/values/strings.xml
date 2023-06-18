@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Hangman</string>
+    <string name="APP_NAME">Hangman</string>
+    <string name="PLAY_BUTTON">PLAY</string>
+    <string name="SETTINGS_BUTTON">SETTINGS</string>
 </resources>

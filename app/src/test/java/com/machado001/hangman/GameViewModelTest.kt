@@ -67,7 +67,7 @@ class GameScreenViewModelTest {
         val livesLeft = viewModel.uiState.value.livesLeft
         viewModel.pickRandomWord()
         viewModel.checkUserGuess('A')
-        viewModel.resetGame()
+        viewModel.resetStates()
         val uiState = viewModel.uiState.value
         println(uiState)
         assertTrue(uiState.wordRandomlyChosen.isNotEmpty())
