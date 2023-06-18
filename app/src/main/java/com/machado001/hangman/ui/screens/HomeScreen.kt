@@ -2,10 +2,12 @@ package com.machado001.hangman.ui.screens
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -48,33 +50,45 @@ fun CenterDiv(
 ) {
     val paddingValue = 16.dp
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_foreground),
             contentDescription = ""
         )
-        Text(
-            text = stringResource(id = R.string.APP_NAME).uppercase(),
-        )
-        Row(modifier = modifier.padding(paddingValue)) {
+        UppercaseText(text = stringResource(id = R.string.APP_NAME))
+        Row(
+            modifier = modifier
+                .padding(paddingValue)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
             Button(
                 onClick = {
                     onNavigateToGame()
                 },
-                modifier = modifier.padding(end = paddingValue),
+                modifier = modifier
+                    .padding(end = paddingValue),
                 elevation = ButtonDefaults.buttonElevation(paddingValue)
             ) {
-                Text(text = stringResource(id = R.string.PLAY_BUTTON).uppercase())
+                UppercaseText(text = stringResource(id = R.string.PLAY_BUTTON))
+
             }
             OutlinedButton(
-                onClick = { onNavigateToSettings() }
+                onClick = { onNavigateToSettings() },
+                modifier = modifier.weight(0.5f)
             ) {
-                Text(text = stringResource(id = R.string.SETTINGS_BUTTON).uppercase())
+                UppercaseText(text = stringResource(id = R.string.SETTINGS_BUTTON))
+
             }
         }
     }
+}
+
+@Composable
+fun UppercaseText(text: String) {
+    Text(text = text.uppercase())
 }
 
 @Preview(showBackground = true)
