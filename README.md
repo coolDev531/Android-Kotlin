@@ -1,13 +1,12 @@
 # Hangman Game (In progress)
 
-Hangman Game (*Jogo da forca* in pt-BR) is a mobile application developed using Jetpack Compose and Kotlin, providing a native mobile experience. It is a recreation of the classic game of hangman where players guess letters to uncover a hidden word. This project serves as a personal learning experience, aiming to build a game from scratch while incorporating best practices and following up-to-date development standards.
+Hangman Game (Jogo da forca in pt-BR) is a mobile application developed using Jetpack Compose and Kotlin, providing a native mobile experience. It is a recreation of the classic game of hangman where players guess letters to uncover a hidden word. This project serves as a personal learning experience, aiming to build a game from scratch while incorporating best practices and following up-to-date development standards.
 
 ## Features
 
 - Interactive gameplay: Guess letters to reveal the hidden word.
 - Randomly generated words: Enjoy a variety of words to guess from a predefined word bank.
 - Visual feedback: See the progress of the word and the incorrect guesses through a user-friendly interface.
-- Game history: Keep track of your previous games and scores.
 
 ## Prerequisites
 
@@ -22,7 +21,7 @@ Before running the Hangman Game project, ensure that you have the following:
 1. Clone the repository:
 
    ```shell
-   git clone https://github.com/machado001/hangman.git
+   git clone https://github.com/machado001/hangman
 2. Open the project in Android Studio.
 
 3. Build and run the application on your emulator or physical device.
@@ -32,9 +31,8 @@ The project follows a well-organized structure to ensure maintainability and sca
 
 - `app/src/main`: Contains the main source code of the Hangman Game application.
   - `java/com/example/hangmangame`: Contains the Kotlin source code for the application.
-    - `data`: Contains the data layer, handling game-related data and logic.
+    - `data`: Contains the data layer, handling game-related data and logic (actual it's just the words hardcoded).
     - `ui`: Contains the user interface components and screens built using Jetpack Compose.
-    - `util`: Contains utility classes and helper functions.
   - `res`: Contains the application resources, such as layouts and strings.
 
 ## Documentation
@@ -47,10 +45,4 @@ To understand the project's codebase and learn more about the implementation det
 Please note that the project primarily relies on the official documentation, compose-samples, and Android source code. Limiting external references ensures a deeper learning experience and encourages self-sufficiency in tackling challenges.
 
 ## Contributing
-As the project is for personal learning purposes and will only be updated until version 1.0.0 is released on the Play Store, contributions are not expected. However, feel free to fork the repository and modify it to suit your own learning goals or add additional features.
-
-## License
-The Hangman Game project is licensed under the [MIT License](LICENSE). Feel free to use, modify, and distribute the code as per the terms of the license.
-
-
- 
+You're welcome. 
