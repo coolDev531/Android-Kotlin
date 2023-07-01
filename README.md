@@ -2,6 +2,10 @@
 
 Hangman Game (Jogo da forca in pt-BR) is a mobile application developed using Jetpack Compose and Kotlin, providing a native mobile experience. It is a recreation of the classic game of hangman where players guess letters to uncover a hidden word. This project serves as a personal learning experience, aiming to build a game from scratch while incorporating best practices and following up-to-date development standards.
 
+## Project current state:
+![Screenshot from 2023-07-01 15-26-22](https://github.com/machado001/hangman/assets/101916850/387d5c73-0524-4256-925b-6fb17c2ac9be)
+
+
 ## Features
 
 - Interactive gameplay: Guess letters to reveal the hidden word.
@@ -42,7 +46,6 @@ To understand the project's codebase and learn more about the implementation det
 - **Compose samples repository**: The `compose-samples` repository provides a collection of sample projects demonstrating different aspects of Jetpack Compose. It can serve as a valuable reference to enhance your understanding. Find the repository at [github.com/android/compose-samples](https://github.com/android/compose-samples).
 - **Android source code**: The official Android source code repository can be a valuable resource to explore the inner workings of the Android platform. Visit [cs.android.com](https://cs.android.com) to access the codebase.
 
-Please note that the project primarily relies on the official documentation, compose-samples, and Android source code. Limiting external references ensures a deeper learning experience and encourages self-sufficiency in tackling challenges.
 
 ## Contributing
 You're welcome. 
