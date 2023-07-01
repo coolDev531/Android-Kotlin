@@ -22,15 +22,19 @@ class GameScreenViewModel : ViewModel() {
     private var currentStreakCount: Int = 0
 
 
-    fun pickRandomWord() {
-        val currentWord = allWords.random()
+    fun pickRandomWordAndCategory() {
+        val currentCategory = allWords.keys.random()
+        val currentWord = allWords[currentCategory]
         _uiState.update { currentState ->
-            currentState.copy(wordRandomlyChosen = currentWord)
+            currentState.copy(
+                wordRandomlyChosen = currentWord?.random(),
+                categoryRandomlyChosen = currentCategory
+            )
         }
     }
 
-    private fun isLetterGuessCorrect(letterFromButton: Char): Boolean {
-        return _uiState.value.wordRandomlyChosen.contains(
+    private fun isLetterGuessCorrect(letterFromButton: Char): Boolean? {
+        return _uiState.value.wordRandomlyChosen?.contains(
             char = letterFromButton,
             ignoreCase = true
         )
@@ -40,7 +44,7 @@ class GameScreenViewModel : ViewModel() {
         lettersGuessed.add(letterFromButton)
         _currentLetterGuessed = letterFromButton.lowercaseChar()
 
-        if (isLetterGuessCorrect(letterFromButton)) {
+        if (isLetterGuessCorrect(letterFromButton) == true) {
             correctLetters.add(_currentLetterGuessed)
 
             _uiState.update { currentState ->
@@ -71,7 +75,7 @@ class GameScreenViewModel : ViewModel() {
         wrongLetters.clear()
         _currentLetterGuessed = ' '
         _isGameOver = false
-        pickRandomWord()
+        pickRandomWordAndCategory()
     }
 
     fun updateStreakCount(streakCount: Int) {

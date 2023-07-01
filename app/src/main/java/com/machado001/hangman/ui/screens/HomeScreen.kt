@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,7 +57,10 @@ fun CenterDiv(
             painter = painterResource(id = R.drawable.ic_launcher_foreground),
             contentDescription = ""
         )
-        UppercaseText(text = stringResource(id = R.string.APP_NAME))
+        Text(
+            text = stringResource(id = R.string.APP_NAME).uppercase(),
+            style = MaterialTheme.typography.headlineLarge
+        )
         Row(
             modifier = modifier
                 .padding(paddingValue)
@@ -72,21 +76,19 @@ fun CenterDiv(
                 elevation = ButtonDefaults.buttonElevation(paddingValue)
             ) {
                 UppercaseText(text = stringResource(id = R.string.PLAY_BUTTON))
-
             }
             OutlinedButton(
                 onClick = { onNavigateToSettings() },
                 modifier = modifier.weight(0.5f)
             ) {
                 UppercaseText(text = stringResource(id = R.string.SETTINGS_BUTTON))
-
             }
         }
     }
 }
 
 @Composable
-fun UppercaseText(text: String) {
+fun UppercaseText(text: String, ) {
     Text(text = text.uppercase())
 }
 

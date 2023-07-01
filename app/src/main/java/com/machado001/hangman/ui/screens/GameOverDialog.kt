@@ -22,12 +22,14 @@ import com.machado001.hangman.ui.theme.HangmanTheme
 @Composable
 fun GameOverDialog(
     resetGame: () -> Unit,
-    wordChosen: String,
+    wordChosen: String?,
 ) {
     AlertDialog(
         title = { GameOverText() },
         text = {
-            DialogContentColumn(wordChosen = wordChosen)
+            if (wordChosen != null) {
+                DialogContentColumn(wordChosen = wordChosen)
+            }
         },
         onDismissRequest = { resetGame() },
         confirmButton = {

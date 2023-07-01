@@ -14,14 +14,11 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -63,7 +60,7 @@ fun GameScreen(
     val gameUiState by gameViewModel.uiState.collectAsState()
 
     LaunchedEffect(gameViewModel.uiState) {
-        gameViewModel.pickRandomWord()
+        gameViewModel.pickRandomWordAndCategory()
     }
 
     GameContent(
@@ -74,6 +71,7 @@ fun GameScreen(
         resetGame = { gameViewModel.resetStates() },
         isGameOver = gameViewModel.isGameOver,
         usedLetters = gameUiState.usedLetters,
+        category = gameUiState.categoryRandomlyChosen,
         updateStreakCount = { gameViewModel.updateStreakCount(gameUiState.streakCount) }
     )
 }
@@ -81,13 +79,14 @@ fun GameScreen(
 
 @Composable
 private fun GameContent(
-    wordChosen: String,
+    wordChosen: String?,
     correctLetters: Set<Char>,
     livesCount: Int,
     ignoredCheckUserGuess: (Char) -> Unit,
     resetGame: () -> Unit,
     isGameOver: Boolean,
     usedLetters: Set<Char>,
+    category: String,
     updateStreakCount: () -> Unit
 ) {
     Column(
@@ -108,7 +107,7 @@ private fun GameContent(
                 wordChosen,
                 correctLetters
             )
-            TipRow()
+            TipRow(tip = category)
             KeyboardLayout(
                 alphabetList = alphabetSet.toList(),
                 checkUserGuess = { ignoredCheckUserGuess(it) },
@@ -119,7 +118,7 @@ private fun GameContent(
         }
 
     }
-    val isWordCorrectlyGuessed = correctLetters.containsAll(wordChosen.toList())
+    val isWordCorrectlyGuessed = wordChosen?.let { correctLetters.containsAll(it.toList()) }
 
     if (isGameOver) {
         GameOverDialog(
@@ -128,7 +127,7 @@ private fun GameContent(
         )
     }
 
-    if (isWordCorrectlyGuessed) {
+    if (isWordCorrectlyGuessed == true) {
         updateStreakCount()
     }
 }
@@ -141,7 +140,7 @@ fun materialColor(): Color {
 
 @Composable
 private fun ChosenWordFlowRow(
-    wordChosen: String,
+    wordChosen: String?,
     correctLetters: Set<Char>
 ) {
     println("PENIS $wordChosen")
@@ -154,7 +153,7 @@ private fun ChosenWordFlowRow(
         horizontalArrangement = Arrangement.Center
     ) {
         LazyRow {
-            items(wordChosen.length) { index ->
+            items(wordChosen!!.length) { index ->
                 WordLetter(
                     letter = wordChosen[index],
                     correctLetters = correctLetters
@@ -193,13 +192,14 @@ private fun WordLetter(
                 .align(Alignment.CenterHorizontally)
                 .alpha(haveAnimationOrNot),
             text = letter.toString().uppercase(),
+            textAlign = TextAlign.Center,
             fontSize = 24.sp
         )
     }
 }
 
 @Composable
-fun TipRow(tip: String = "pneumonoultramicroscopicccc") {
+fun TipRow(tip: String = "Some_tip_here") {
     Row(
         modifier = Modifier
             .padding(vertical = 16.dp)

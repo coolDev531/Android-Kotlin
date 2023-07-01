@@ -2,7 +2,8 @@ package com.machado001.hangman.ui.screens
 
 
 data class GameUiState(
-    val wordRandomlyChosen: String = "",
+    val wordRandomlyChosen: String? = "",
+    val categoryRandomlyChosen: String = "",
     val usedLetters: Set<Char> = emptySet(),
     val correctLetters: Set<Char> = emptySet(),
     val wrongLetters: Set<Char> = emptySet(),
