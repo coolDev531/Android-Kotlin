@@ -38,7 +38,6 @@ fun Home(
             onNavigateToGame = onNavigateToGame,
             onNavigateToSettings = onNavigateToSettings
         )
-
     }
 }
 

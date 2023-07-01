@@ -64,7 +64,8 @@ class GameScreenViewModel : ViewModel() {
 
     fun resetStates() {
         val currentStreakCount = _uiState.value.streakCount // Salva o valor atual do streakCount
-        _uiState.value = GameUiState(streakCount = currentStreakCount) // Cria um novo GameUiState com o valor do streakCount preservado
+        _uiState.value =
+            GameUiState(streakCount = currentStreakCount) // Cria um novo GameUiState com o valor do streakCount preservado
         lettersGuessed.clear()
         correctLetters.clear()
         wrongLetters.clear()

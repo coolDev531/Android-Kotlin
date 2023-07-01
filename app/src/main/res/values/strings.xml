@@ -4,4 +4,6 @@
     <string name="SETTINGS_BUTTON">SETTINGS</string>
     <string name="PLAY_AGAIN_BUTTON_DIALOG">Play Again</string>
     <string name="QUIT_GAME_BUTTON_DIALOG">Quit</string>
+    <string name="GAME_OVER_TEXT_DIALOG">GAME OVER!</string>
+    <string name="REVEAL_WORD_TEXT_DIALOG">"the word was:\n%s"</string>
 </resources>

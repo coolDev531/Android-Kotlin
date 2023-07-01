@@ -52,7 +52,7 @@ fun GameOverDialog(
 @Composable
 private fun GameOverText() {
     Text(
-        text = "GAME OVER!",
+        text = stringResource(id = R.string.GAME_OVER_TEXT_DIALOG),
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center
     )
@@ -78,7 +78,13 @@ private fun RevealedWordRow(
     modifier: Modifier = Modifier
 ) {
     Row {
-        Text(text = "the word was:\n$wordChosen")
+        Text(
+            text = stringResource(
+                id = R.string.REVEAL_WORD_TEXT_DIALOG,
+                wordChosen
+            ),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -88,7 +94,7 @@ fun GameOverDialogPreview() {
     HangmanTheme {
         GameOverDialog(
             resetGame = { /*TODO*/ },
-            wordChosen = "ABOCADO",
+            wordChosen = "CAVALO IMUNDO",
         )
     }
 }
