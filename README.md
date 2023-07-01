@@ -26,7 +26,7 @@ Before running the Hangman Game project, ensure that you have the following:
 
 3. Build and run the application on your emulator or physical device.
 
-## Project Structure
+## Project Structure (Model-View-ViewModel)
 The project follows a well-organized structure to ensure maintainability and scalability. Here's an overview of the main directories and files:
 
 - `app/src/main`: Contains the main source code of the Hangman Game application.
