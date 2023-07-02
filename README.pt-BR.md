@@ -9,7 +9,7 @@ Sim, é um jogo da forca, sem a forca. Disponível na Play Store logo logo.
 ## O app
 
 - Jogabilidade interativa: Adivinhe letras para revelar a palavra oculta.
-- Palavras geradas aleatoriamente: Desfrute de uma variedade de palavras separadas por categoria derivadas banco de palavras pré-definido.
+- Palavras geradas aleatoriamente: Desfrute de uma variedade de palavras separadas por categoria derivadas de um banco de palavras pré-definido.
 - Feedback visual: Veja o progresso da palavra e os palpites incorretos por meio de uma interface amigável.
 
 ## Pré-requisitos
