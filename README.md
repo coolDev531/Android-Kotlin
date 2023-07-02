@@ -4,6 +4,8 @@ README in portuguese brazilian available [here](https://github.com/machado001/ha
 
 Hangman Game is a mobile application developed using Jetpack Compose and Kotlin, providing a native mobile experience. It is a recreation of the classic game of hangman where players guess letters to uncover a hidden word. This project serves as a personal learning experience, aiming to build a game from scratch while incorporating best practices and following up-to-date development standards.
 
+Yes, it's a hangman game, without the hanging. Available on the Play Store soon.
+
 ## Project current state:
 ![Screenshot from 2023-07-01 20-42-06](https://github.com/machado001/hangman/assets/101916850/7604057c-d2ef-4d22-a3fa-4cfa7aff7613)
 
