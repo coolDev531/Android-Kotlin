@@ -15,6 +15,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
@@ -118,7 +120,10 @@ private fun GameContent(
         }
 
     }
-    val isWordCorrectlyGuessed = wordChosen?.let { correctLetters.containsAll(it.toList()) }
+    val isWordCorrectlyGuessed = wordChosen?.let { word ->
+        val wordWithoutSpaces = word.filterNot { it.isWhitespace() }
+        correctLetters.containsAll(wordWithoutSpaces.toList())
+    } ?: false
 
     if (isGameOver) {
         GameOverDialog(
@@ -127,7 +132,7 @@ private fun GameContent(
         )
     }
 
-    if (isWordCorrectlyGuessed == true) {
+    if (isWordCorrectlyGuessed) {
         updateStreakCount()
     }
 }
@@ -141,7 +146,7 @@ fun materialColor(): Color {
 @Composable
 private fun ChosenWordFlowRow(
     wordChosen: String?,
-    correctLetters: Set<Char>
+    correctLetters: Set<Char>,
 ) {
     println("PENIS $wordChosen")
 
@@ -154,10 +159,14 @@ private fun ChosenWordFlowRow(
     ) {
         LazyRow {
             items(wordChosen!!.length) { index ->
-                WordLetter(
-                    letter = wordChosen[index],
-                    correctLetters = correctLetters
-                )
+                if (!wordChosen[index].isWhitespace()) {
+                    WordLetter(
+                        letter = wordChosen[index],
+                        correctLetters = correctLetters
+                    )
+                } else {
+                    Spacer(modifier = Modifier.padding(16.dp))
+                }
             }
         }
     }
@@ -185,7 +194,11 @@ private fun WordLetter(
         modifier = modifier
             .padding(2.4.dp)
             .size(32.dp),
-        elevation = CardDefaults.elevatedCardElevation(),
+        elevation = CardDefaults.elevatedCardElevation(4.dp),
+        colors = cardColors(
+            containerColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            contentColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Text(
             modifier = Modifier
@@ -199,7 +212,7 @@ private fun WordLetter(
 }
 
 @Composable
-fun TipRow(tip: String = "Some_tip_here") {
+fun TipRow(tip: String) {
     Row(
         modifier = Modifier
             .padding(vertical = 16.dp)
@@ -306,8 +319,8 @@ private fun updateButtonTransitionData(
         label = "color"
     ) { state ->
         when (state) {
-            ButtonState.Correct -> MaterialTheme.colorScheme.onPrimary
-            ButtonState.Incorrect -> MaterialTheme.colorScheme.onError
+            ButtonState.Correct -> MaterialTheme.colorScheme.secondary
+            ButtonState.Incorrect -> MaterialTheme.colorScheme.error
         }
     }
     return remember(transition) { ButtonTransitionData(color) }
@@ -340,6 +353,7 @@ private fun KeyboardKey(
         shape = ShapeDefaults.ExtraLarge,
         colors = ButtonDefaults.buttonColors(
             disabledContainerColor = transitionData.color,
+            disabledContentColor = MaterialTheme.colorScheme.outline
         ),
         modifier = modifier
             .padding(4.dp),
