@@ -1,6 +1,6 @@
 # Hangman Game (In progress)
 
-Hangman Game (Jogo da forca in pt-BR) is a mobile application developed using Jetpack Compose and Kotlin, providing a native mobile experience. It is a recreation of the classic game of hangman where players guess letters to uncover a hidden word. This project serves as a personal learning experience, aiming to build a game from scratch while incorporating best practices and following up-to-date development standards.
+Hangman Game is a mobile application developed using Jetpack Compose and Kotlin, providing a native mobile experience. It is a recreation of the classic game of hangman where players guess letters to uncover a hidden word. This project serves as a personal learning experience, aiming to build a game from scratch while incorporating best practices and following up-to-date development standards.
 
 ## Project current state:
 ![Screenshot from 2023-07-01 20-42-06](https://github.com/machado001/hangman/assets/101916850/7604057c-d2ef-4d22-a3fa-4cfa7aff7613)
