@@ -48,11 +48,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.machado001.hangman.R
 import com.machado001.hangman.ui.theme.HangmanTheme
 
 @Composable
@@ -219,12 +221,11 @@ fun TipRow(tip: String) {
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(text = "Tip: $tip")
+        Text(text = stringResource(id = R.string.TIP_TEXT, tip))
     }
 }
 
 private const val ALPHA_CORRECT_VALUE = 1F
-
 private const val ALPHA_INCORRECT_VALUE = 0F
 
 

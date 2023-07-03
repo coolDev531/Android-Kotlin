@@ -19,6 +19,8 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        resConfigs("en", "pt", "pt-rBR")
     }
 
     buildTypes {
