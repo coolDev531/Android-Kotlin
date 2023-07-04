@@ -4,7 +4,7 @@
     <string name="APP_NAME">Hangman</string>
     <string name="PLAY_BUTTON">JOGAR</string>
     <string name="SETTINGS_BUTTON">CONFIGURAÇÕES</string>
-    <string name="PLAY_AGAIN_BUTTON_DIALOG">Jogar Novamente</string>
+    <string name="PLAY_AGAIN_BUTTON_DIALOG">Reiniciar</string>
     <string name="QUIT_GAME_BUTTON_DIALOG">Sair</string>
     <string name="GAME_OVER_TEXT_DIALOG">FIM DE JOGO!</string>
     <string name="REVEAL_WORD_TEXT_DIALOG">"a palavra era:\n%s"</string>
