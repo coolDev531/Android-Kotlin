@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.machado001.hangman.R
 import com.machado001.hangman.ui.theme.HangmanTheme
+import java.text.Normalizer
 
 @Composable
 fun GameScreen(
@@ -122,9 +123,15 @@ private fun GameContent(
         }
 
     }
-    val isWordCorrectlyGuessed = wordChosen?.let { word ->
-        val wordWithoutSpaces = word.filterNot { it.isWhitespace() }
-        correctLetters.containsAll(wordWithoutSpaces.toList())
+    val isWordCorrectlyGuessed = wordChosen?.run {
+        val wordWithoutWhitespaces = this.filterNot { it.isWhitespace() }
+
+        // Normalize the word: remove diacritics and convert to ASCII
+        val regex = "[^\\p{ASCII}]".toRegex()
+        val normalizedWord =
+            Normalizer.normalize(wordWithoutWhitespaces, Normalizer.Form.NFD).replace(regex, "")
+
+        correctLetters.containsAll(normalizedWord.toList())
     } ?: false
 
     if (isGameOver) {
@@ -161,13 +168,14 @@ private fun ChosenWordFlowRow(
     ) {
         LazyRow {
             items(wordChosen!!.length) { index ->
-                if (!wordChosen[index].isWhitespace()) {
+                if (wordChosen[index].isWhitespace()) {
+                    Spacer(modifier = Modifier.padding(16.dp))
+
+                } else {
                     WordLetter(
                         letter = wordChosen[index],
                         correctLetters = correctLetters
                     )
-                } else {
-                    Spacer(modifier = Modifier.padding(16.dp))
                 }
             }
         }
@@ -180,10 +188,12 @@ private fun ChosenWordFlowRow(
 private fun WordLetter(
     modifier: Modifier = Modifier,
     letter: Char,
-    correctLetters: Set<Char>
+    correctLetters: Set<Char> = emptySet()
 ) {
 
-    val isLetterCorrect: Boolean = correctLetters.contains(letter)
+    val letterNormalized = Normalizer.normalize(letter.toString(), Normalizer.Form.NFD)
+    val normalizedChar: Char = letterNormalized[0]
+    val isLetterCorrect: Boolean = correctLetters.contains(normalizedChar)
     val alphaValue = if (isLetterCorrect) ALPHA_CORRECT_VALUE else ALPHA_INCORRECT_VALUE
     val alphaAnimation: Float by animateFloatAsState(
         targetValue = alphaValue,

@@ -5,6 +5,7 @@ import com.machado001.hangman.data.allWords
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.text.Collator
 
 
 class GameScreenViewModel : ViewModel() {
@@ -14,6 +15,7 @@ class GameScreenViewModel : ViewModel() {
     private var lettersGuessed: MutableSet<Char> = mutableSetOf()
     private var correctLetters: MutableSet<Char> = mutableSetOf()
     private var wrongLetters: MutableSet<Char> = mutableSetOf()
+    private var word: String? = ""
 
     private var _currentLetterGuessed: Char = ' '
 
@@ -25,20 +27,27 @@ class GameScreenViewModel : ViewModel() {
 
     fun pickRandomWordAndCategory() {
         val currentCategory = allWords.keys.random()
-        val currentWord = allWords[currentCategory]
+        val currentWord = allWords[currentCategory]?.random()
+        word = currentWord
         _uiState.update { currentState ->
             currentState.copy(
-                wordRandomlyChosen = currentWord?.random(),
+                wordRandomlyChosen = word,
                 categoryRandomlyChosen = currentCategory
             )
         }
     }
 
+
     private fun isLetterGuessCorrect(letterFromButton: Char): Boolean? {
-        return _uiState.value.wordRandomlyChosen?.contains(
-            char = letterFromButton,
-            ignoreCase = true
-        )
+        val collator: Collator = Collator.getInstance()
+        collator.strength = Collator.PRIMARY
+
+        val wordRandomlyChosen = _uiState.value.wordRandomlyChosen
+        val normalizedLetterFromButton = letterFromButton.toString()
+
+        return wordRandomlyChosen?.any { char ->
+            collator.compare(char.toString(), normalizedLetterFromButton) == 0
+        }
     }
 
     fun checkUserGuess(letterFromButton: Char) {

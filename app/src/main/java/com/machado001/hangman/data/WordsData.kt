@@ -1,12 +1,7 @@
 package com.machado001.hangman.data
 
-import android.content.Context
-import android.content.res.Resources
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringArrayResource
-import com.machado001.hangman.R
-import java.util.Locale
 
+import android.content.res.Resources
 
 val locale = Resources.getSystem().configuration.locales.get(0)
 
