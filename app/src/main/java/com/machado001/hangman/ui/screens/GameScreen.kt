@@ -122,7 +122,7 @@ private fun GameContent(
 
     }
     val isWordCorrectlyGuessed = wordChosen?.run {
-        val wordWithoutWhitespaces = this.filterNot { it.isWhitespace() }
+        val wordWithoutWhitespaces = this.filterNot { it.isWhitespace() || it == '-' }
 
         // Normalize the word: remove diacritics and convert to ASCII
         val regex = "[^\\p{ASCII}]".toRegex()
@@ -169,6 +169,16 @@ private fun ChosenWordFlowRow(
                 if (wordChosen[index].isWhitespace()) {
                     Spacer(modifier = Modifier.padding(16.dp))
 
+                } else if (wordChosen[index] == '-') {
+                    Text(
+                        modifier = Modifier
+                            .padding(1.2.dp)
+                            .size(32.dp),
+                        text = "-",
+                        textAlign = TextAlign.Center,
+                        fontSize = 24.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 } else {
                     WordLetter(
                         letter = wordChosen[index],
@@ -383,6 +393,27 @@ private fun KeyboardKey(
 fun GameScreenPreview() {
     HangmanTheme(darkTheme = true) {
         GameScreen()
+    }
+}
+
+@Preview
+@Composable
+fun hifenPreview() {
+    HangmanTheme(darkTheme = true) {
+        Row {
+            WordLetter(letter = 'c')
+            Text(
+                modifier = Modifier
+                    .size(24.dp),
+                text = "-",
+                textAlign = TextAlign.Center,
+                fontSize = 24.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            WordLetter(letter = 'a')
+
+
+        }
     }
 }
 
