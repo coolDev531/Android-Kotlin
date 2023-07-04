@@ -2,10 +2,11 @@ package com.machado001.hangman.data
 
 
 import android.content.res.Resources
+import java.util.Locale
 
-val locale = Resources.getSystem().configuration.locales.get(0)
+val locale: Locale = Resources.getSystem().configuration.locales.get(0)
 
-val allWords: Map<String, Set<String>> = if (locale.language != "pt") {
+val allWords: Map<String, Set<String>> = if (locale.language == "en") {
     mapOf(
         "fruit" to setOf(
             "apple",

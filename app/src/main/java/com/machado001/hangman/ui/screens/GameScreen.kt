@@ -99,8 +99,6 @@ private fun GameContent(
             .padding(horizontal = 16.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceEvenly
-
-
     ) {
 
         LivesLeftRow(
