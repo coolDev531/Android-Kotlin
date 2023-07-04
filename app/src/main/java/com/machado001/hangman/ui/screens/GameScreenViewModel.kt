@@ -28,7 +28,7 @@ class GameScreenViewModel : ViewModel() {
     fun pickRandomWordAndCategory() {
         val currentCategory = allWords.keys.random()
         val currentWord = allWords[currentCategory]?.random()
-        word = currentWord
+        word = currentWord?.lowercase()
         _uiState.update { currentState ->
             currentState.copy(
                 wordRandomlyChosen = word,
