@@ -1,5 +1,8 @@
 package com.machado001.hangman.ui.screens
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -11,6 +14,11 @@ import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -106,7 +114,7 @@ private fun GameContent(
                 correctLetters
             )
 
-            TipRow(tip = category, winCount)
+            TipAndCountTextRow(tip = category, winCount)
 
 
             KeyboardLayout(
@@ -229,8 +237,9 @@ private fun WordLetter(
     }
 }
 
+
 @Composable
-fun TipRow(tip: String, winCount: Int) {
+fun TipAndCountTextRow(tip: String, winCount: Int) {
     Row(
         modifier = Modifier
             .padding(vertical = 16.dp)
@@ -238,7 +247,35 @@ fun TipRow(tip: String, winCount: Int) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Text(text = stringResource(id = R.string.TIP_TEXT, tip))
-        Text(text = stringResource(id = R.string.WIN_COUNT_TEXT, winCount))
+        AnimatedWinCount(winCount = winCount)
+    }
+}
+
+@Composable
+@OptIn(ExperimentalAnimationApi::class)
+private fun AnimatedWinCount(winCount: Int) {
+    AnimatedContent(
+        targetState = winCount,
+        transitionSpec = {
+            // Compare the incoming number with the previous number.
+            if (targetState > initialState) {
+                // If the target number is larger, it slides up and fades in
+                // while the initial (smaller) number slides up and fades out.
+                slideInVertically { height -> height } + fadeIn() with
+                        slideOutVertically { height -> -height } + fadeOut()
+            } else {
+                // If the target number is smaller, it slides down and fades in
+                // while the initial number slides down and fades out.
+                slideInVertically { height -> -height } + fadeIn() with
+                        slideOutVertically { height -> height } + fadeOut()
+            }.using(
+                // Disable clipping since the faded slide-in/out should
+                // be displayed out of bounds.
+                SizeTransform(clip = false)
+            )
+        }
+    ) { targetCount ->
+        Text(text = stringResource(id = R.string.WIN_COUNT_TEXT, targetCount))
     }
 }
 
