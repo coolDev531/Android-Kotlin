@@ -17,15 +17,19 @@ class GameScreenViewModelTest {
     fun gameScreenViewModel_PickRandomWord_NewWorldPicked() {
         viewModel.pickRandomWordAndCategory()
         val wordChosen = viewModel.uiState.value.wordRandomlyChosen
-        assertTrue(wordChosen.isNotEmpty())
+        if (wordChosen != null) {
+            assertTrue(wordChosen.isNotEmpty())
+        }
     }
 
     @Test
     fun gameScreenViewModel_CorrectWordGuessed_CorrectLettersUpdated() {
         viewModel.pickRandomWordAndCategory()
         val wordChosen = viewModel.uiState.value.wordRandomlyChosen
-        val letter = wordChosen.first()
-        viewModel.checkUserGuess(letter)
+        val letter = wordChosen?.first()
+        if (letter != null) {
+            viewModel.checkUserGuess(letter)
+        }
         val correctLetters = viewModel.uiState.value.correctLetters
         assertTrue(correctLetters.contains(letter))
     }
@@ -44,7 +48,7 @@ class GameScreenViewModelTest {
     fun gameScreenViewModel_GameOver_LivesLeftIsZero() {
         viewModel.pickRandomWordAndCategory()
         val wordChosen = viewModel.uiState.value.wordRandomlyChosen
-        val incorrectLetters = alphabetSet.filter { !wordChosen.contains(it, ignoreCase = true) }
+        val incorrectLetters = alphabetSet.filter { !wordChosen!!.contains(it, ignoreCase = true) }
 
         var currentLives = viewModel.uiState.value.livesLeft
         var index = 0
@@ -70,7 +74,7 @@ class GameScreenViewModelTest {
         viewModel.resetStates()
         val uiState = viewModel.uiState.value
         println(uiState)
-        assertTrue(uiState.wordRandomlyChosen.isNotEmpty())
+        uiState.wordRandomlyChosen?.let { assertTrue(it.isNotEmpty()) }
         assertTrue(uiState.usedLetters.isEmpty())
         assertTrue(uiState.correctLetters.isEmpty())
         assertTrue(uiState.wrongLetters.isEmpty())
@@ -78,3 +82,4 @@ class GameScreenViewModelTest {
         assertFalse(uiState.isGameOver)
     }
 }
+

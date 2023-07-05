@@ -8,5 +8,7 @@
     <string name="QUIT_GAME_BUTTON_DIALOG">Sair</string>
     <string name="GAME_OVER_TEXT_DIALOG">FIM DE JOGO!</string>
     <string name="REVEAL_WORD_TEXT_DIALOG">"a palavra era:\n%s"</string>
-    <string name="TIP_TEXT">"Dica: %s"</string>
+    <string name="TIP_TEXT">"dica: %s"</string>
+    <string name="WIN_COUNT_TEXT">acertos: %d</string>
+    <string name="SHOW_HOW_MANY_HITS">sequência de acertos:\n%d</string>
 </resources>

@@ -36,7 +36,6 @@ import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -64,10 +63,6 @@ fun GameScreen(
 ) {
     val gameUiState by gameViewModel.uiState.collectAsState()
 
-    LaunchedEffect(gameViewModel.uiState) {
-        gameViewModel.pickRandomWordAndCategory()
-    }
-
     GameContent(
         wordChosen = gameUiState.wordRandomlyChosen,
         correctLetters = gameUiState.correctLetters,
@@ -77,7 +72,7 @@ fun GameScreen(
         isGameOver = gameViewModel.isGameOver,
         usedLetters = gameUiState.usedLetters,
         category = gameUiState.categoryRandomlyChosen,
-        updateStreakCount = { gameViewModel.updateStreakCount(gameUiState.streakCount) }
+        winCount = gameUiState.streakCount,
     )
 }
 
@@ -92,7 +87,7 @@ private fun GameContent(
     isGameOver: Boolean,
     usedLetters: Set<Char>,
     category: String,
-    updateStreakCount: () -> Unit
+    winCount: Int,
 ) {
     Column(
         modifier = Modifier
@@ -105,42 +100,45 @@ private fun GameContent(
             livesCount
         )
 
-        Column {
+        Column(modifier = Modifier.fillMaxWidth()) {
             ChosenWordFlowRow(
                 wordChosen,
                 correctLetters
             )
-            TipRow(tip = category)
+
+            TipRow(tip = category, winCount)
+
+
             KeyboardLayout(
                 alphabetList = alphabetSet.toList(),
                 checkUserGuess = { ignoredCheckUserGuess(it) },
                 correctLetters = correctLetters,
                 usedLetters = usedLetters,
             )
-
         }
 
     }
     val isWordCorrectlyGuessed = wordChosen?.run {
         val wordWithoutWhitespaces = this.filterNot { it.isWhitespace() || it == '-' }
-
         // Normalize the word: remove diacritics and convert to ASCII
         val regex = "[^\\p{ASCII}]".toRegex()
         val normalizedWord =
             Normalizer.normalize(wordWithoutWhitespaces, Normalizer.Form.NFD).replace(regex, "")
 
         correctLetters.containsAll(normalizedWord.toList())
-    } ?: false
+    } == true
 
     if (isGameOver) {
         GameOverDialog(
             resetGame = resetGame,
             wordChosen = wordChosen,
+            hitsCount = winCount
         )
     }
 
+
     if (isWordCorrectlyGuessed) {
-        updateStreakCount()
+        resetGame()
     }
 }
 
@@ -232,14 +230,15 @@ private fun WordLetter(
 }
 
 @Composable
-fun TipRow(tip: String) {
+fun TipRow(tip: String, winCount: Int) {
     Row(
         modifier = Modifier
             .padding(vertical = 16.dp)
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Text(text = stringResource(id = R.string.TIP_TEXT, tip))
+        Text(text = stringResource(id = R.string.WIN_COUNT_TEXT, winCount))
     }
 }
 
@@ -398,7 +397,7 @@ fun GameScreenPreview() {
 
 @Preview
 @Composable
-fun hifenPreview() {
+fun HifenPreview() {
     HangmanTheme(darkTheme = true) {
         Row {
             WordLetter(letter = 'c')

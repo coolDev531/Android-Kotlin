@@ -7,10 +7,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,12 +28,21 @@ import com.machado001.hangman.ui.theme.HangmanTheme
 fun GameOverDialog(
     resetGame: () -> Unit,
     wordChosen: String?,
+    hitsCount: Int,
 ) {
+
     AlertDialog(
+        icon = {
+            Icon(
+                painter = painterResource(id = R.drawable.round_sentiment_very_dissatisfied_24),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error
+            )
+        },
         title = { GameOverText() },
         text = {
             if (wordChosen != null) {
-                DialogContentColumn(wordChosen = wordChosen)
+                DialogContentColumn(wordChosen = wordChosen, hitsCount)
             }
         },
         onDismissRequest = { resetGame() },
@@ -62,14 +76,24 @@ private fun GameOverText() {
 
 @Composable
 private fun DialogContentColumn(
-    wordChosen: String
+    wordChosen: String,
+    hitsCount: Int
 ) {
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth()
     ) {
         RevealedWordRow(wordChosen)
+        Divider(
+            modifier = Modifier
+                .alpha(0.36f)
+                .fillMaxWidth(0.5f)
+                .padding(vertical = 12.dp),
+            color = MaterialTheme.colorScheme.primary
+        )
+        ShowHowManyHitsUserGot(hitsCount = hitsCount)
     }
 }
 
@@ -77,7 +101,6 @@ private fun DialogContentColumn(
 @Composable
 private fun RevealedWordRow(
     wordChosen: String,
-    modifier: Modifier = Modifier
 ) {
     Row {
         Text(
@@ -90,13 +113,29 @@ private fun RevealedWordRow(
     }
 }
 
+@Composable
+private fun ShowHowManyHitsUserGot(hitsCount: Int) {
+    Row(
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Text(
+            text = stringResource(
+                id = R.string.SHOW_HOW_MANY_HITS,
+                hitsCount
+            ),
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
 @Preview
 @Composable
 fun GameOverDialogPreview() {
     HangmanTheme {
         GameOverDialog(
             resetGame = { /*TODO*/ },
-            wordChosen = "CAVALO IMUNDO",
+            wordChosen = "PENIS MOLHADO COM CENOURA",
+            hitsCount = 3
         )
     }
 }

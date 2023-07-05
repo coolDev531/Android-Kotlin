@@ -5,6 +5,7 @@ import com.machado001.hangman.data.allWords
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import java.text.Collator
 
 
@@ -18,12 +19,13 @@ class GameScreenViewModel : ViewModel() {
     private var word: String? = ""
 
     private var _currentLetterGuessed: Char = ' '
-
-    private var _isGameOver: Boolean = false
     val isGameOver: Boolean get() = _uiState.value.livesLeft == 0
 
-    private var currentStreakCount: Int = 0
+    private var _currentStreakCount: Int = 0
 
+    init {
+        pickRandomWordAndCategory()
+    }
 
     fun pickRandomWordAndCategory() {
         val currentCategory = allWords.keys.random()
@@ -56,7 +58,6 @@ class GameScreenViewModel : ViewModel() {
 
         if (isLetterGuessCorrect(letterFromButton) == true) {
             correctLetters.add(_currentLetterGuessed)
-
             _uiState.update { currentState ->
                 currentState.copy(
                     usedLetters = lettersGuessed.toSet(),
@@ -77,23 +78,18 @@ class GameScreenViewModel : ViewModel() {
     }
 
     fun resetStates() {
-        val currentStreakCount = _uiState.value.streakCount // Salva o valor atual do streakCount
-        _uiState.value =
-            GameUiState(streakCount = currentStreakCount) // Cria um novo GameUiState com o valor do streakCount preservado
+        _currentStreakCount = if (!isGameOver) ++_currentStreakCount else 0
+        _uiState.value = GameUiState(streakCount = _currentStreakCount)
         lettersGuessed.clear()
         correctLetters.clear()
         wrongLetters.clear()
         _currentLetterGuessed = ' '
-        _isGameOver = false
         pickRandomWordAndCategory()
     }
-
-    fun updateStreakCount(streakCount: Int) {
-        resetStates()
-        _uiState.update { currentState ->
-            currentState.copy(
-                streakCount = streakCount.inc()
-            )
-        }
-    }
 }
+
+
+
+
+
+

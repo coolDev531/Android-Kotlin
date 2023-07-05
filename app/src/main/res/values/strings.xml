@@ -6,5 +6,7 @@
     <string name="QUIT_GAME_BUTTON_DIALOG">Quit</string>
     <string name="GAME_OVER_TEXT_DIALOG">GAME OVER!</string>
     <string name="REVEAL_WORD_TEXT_DIALOG">"the word was:\n%s"</string>
-    <string name="TIP_TEXT">"Tip: %s"</string>
+    <string name="TIP_TEXT">"tip: %s"</string>
+    <string name="WIN_COUNT_TEXT">hits: %d</string>
+    <string name="SHOW_HOW_MANY_HITS">hit streak:\n%d</string>
 </resources>
