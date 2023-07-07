@@ -1,4 +1,4 @@
-package com.machado001.hangman.ui.screens
+package com.machado001.hangman.ui.screens.gameScreen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -62,16 +62,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.machado001.hangman.R
+import com.machado001.hangman.ui.components.dialogs.BackToHomeDialog
+import com.machado001.hangman.ui.components.dialogs.GameOverDialog
 import com.machado001.hangman.ui.theme.HangmanTheme
 import java.text.Normalizer
 
 @Composable
 fun GameScreen(
-    gameViewModel: GameScreenViewModel = viewModel()
+    gameViewModel: GameScreenViewModel = viewModel(),
+    onNavigateUp: () -> Unit
 ) {
     val gameUiState by gameViewModel.uiState.collectAsState()
 
     GameContent(
+        onNavigateUp = onNavigateUp,
         wordChosen = gameUiState.wordRandomlyChosen,
         correctLetters = gameUiState.correctLetters,
         livesCount = gameUiState.livesLeft,
@@ -96,6 +100,7 @@ private fun GameContent(
     usedLetters: Set<Char>,
     category: String,
     winCount: Int,
+    onNavigateUp: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -148,6 +153,9 @@ private fun GameContent(
     if (isWordCorrectlyGuessed) {
         resetGame()
     }
+
+    BackToHomeDialog(onNavigateUp)
+
 }
 
 @Composable
@@ -323,6 +331,7 @@ private fun LivesLeftRow(
     }
 }
 
+
 @Composable
 private fun KeyboardLayout(
     checkUserGuess: (Char) -> Unit,
@@ -387,7 +396,7 @@ private fun KeyboardKey(
     letterFromButton: Char,
     correctLetters: Set<Char>,
     usedLetters: Set<Char>,
-    checkUserGuess: (Char) -> Unit
+    checkUserGuess: (Char) -> Unit,
 ) {
     val isEnabled = remember(
         letterFromButton,
@@ -416,41 +425,10 @@ private fun KeyboardKey(
     ) {
         Text(
             text = letterFromButton.toString(),
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.fillMaxSize(),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }
-
-
-@Preview
-@Composable
-fun GameScreenPreview() {
-    HangmanTheme(darkTheme = true) {
-        GameScreen()
-    }
-}
-
-@Preview
-@Composable
-fun HifenPreview() {
-    HangmanTheme(darkTheme = true) {
-        Row {
-            WordLetter(letter = 'c')
-            Text(
-                modifier = Modifier
-                    .size(24.dp),
-                text = "-",
-                textAlign = TextAlign.Center,
-                fontSize = 24.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            WordLetter(letter = 'a')
-
-
-        }
-    }
-}
-
 

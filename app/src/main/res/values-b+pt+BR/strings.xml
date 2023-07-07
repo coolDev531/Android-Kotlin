@@ -11,4 +11,10 @@
     <string name="TIP_TEXT">"dica: %s"</string>
     <string name="WIN_COUNT_TEXT">acertos: %d</string>
     <string name="SHOW_HOW_MANY_HITS">sequência de acertos:\n%d</string>
+    <string name="QUIT_GAME_CONFIRMATION_TEXT_TITLE">Ir para tela principal?</string>
+    <string name="QUIT_GAME_CONFIRMATION_TEXT_DESCRIPTION">O jogo atual será perdido</string>
+    <string name="YES_TEXT">sim</string>
+    <string name="NO_TEXT">não</string>
+    <string name="INSTRUCTIONS_TITLE">Instruções </string>
+    <string name="GO_BACK_TEXT">Voltar</string>
 </resources>

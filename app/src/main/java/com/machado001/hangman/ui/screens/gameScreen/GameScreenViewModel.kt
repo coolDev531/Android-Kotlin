@@ -1,11 +1,10 @@
-package com.machado001.hangman.ui.screens
+package com.machado001.hangman.ui.screens.gameScreen
 
 import androidx.lifecycle.ViewModel
 import com.machado001.hangman.data.allWords
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.updateAndGet
 import java.text.Collator
 
 

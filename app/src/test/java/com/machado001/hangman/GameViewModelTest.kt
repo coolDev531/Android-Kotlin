@@ -1,7 +1,7 @@
 package com.machado001.hangman
 
-import com.machado001.hangman.ui.screens.GameScreenViewModel
-import com.machado001.hangman.ui.screens.alphabetSet
+import com.machado001.hangman.ui.screens.gameScreen.GameScreenViewModel
+import com.machado001.hangman.ui.screens.gameScreen.alphabetSet
 import org.junit.Test
 import org.junit.Assert.*
 

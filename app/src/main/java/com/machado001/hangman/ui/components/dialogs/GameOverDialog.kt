@@ -1,4 +1,4 @@
-package com.machado001.hangman.ui.screens
+package com.machado001.hangman.ui.components.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +10,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -55,7 +56,7 @@ fun GameOverDialog(
             }
         },
         dismissButton = {
-            Button(
+            OutlinedButton(
                 onClick = {},
                 modifier = Modifier.padding(8.dp)
             ) {

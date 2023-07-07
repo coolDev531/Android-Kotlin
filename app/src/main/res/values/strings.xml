@@ -9,4 +9,13 @@
     <string name="TIP_TEXT">"tip: %s"</string>
     <string name="WIN_COUNT_TEXT">hits: %d</string>
     <string name="SHOW_HOW_MANY_HITS">hit streak:\n%d</string>
+    <string name="QUIT_GAME_CONFIRMATION_TEXT_TITLE">Go to home?</string>
+    <string name="QUIT_GAME_CONFIRMATION_TEXT_DESCRIPTION">You will lose you current game</string>
+    <string name="YES_TEXT">yes</string>
+    <string name="NO_TEXT">no</string>
+    <string name="INSTRUCTIONS_TITLE">Instructions </string>
+    <string name="GO_BACK_TEXT">Return</string>
+
+
 </resources>
+

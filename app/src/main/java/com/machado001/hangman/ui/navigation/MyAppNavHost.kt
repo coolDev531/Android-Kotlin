@@ -6,18 +6,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.machado001.hangman.ui.screens.GameScreen
-import com.machado001.hangman.ui.screens.Home
-import com.machado001.hangman.ui.screens.SettingsScreen
+import com.machado001.hangman.ui.screens.gameScreen.GameScreen
+import com.machado001.hangman.ui.screens.homeScreen.Home
+import com.machado001.hangman.ui.screens.instructionsScreen.InstructionsScreen
 
 @Composable
 fun MyAppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = Destinations.Home.name
+    startDestination: String = AppDestinations.Home.name
 ) {
-    val gameRoute = Destinations.Game.name
-    val settingsRoute = Destinations.Settings.name
+    val gameRoute = AppDestinations.Game.name
+    val instructionsRoute = AppDestinations.Instructions.name
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -27,20 +27,14 @@ fun MyAppNavHost(
             Home(
                 modifier = modifier,
                 onNavigateToGame = { navController.navigate(gameRoute) },
-                onNavigateToSettings = { navController.navigate(settingsRoute) }
+                onNavigateToInstructions = { navController.navigate(instructionsRoute) },
             )
         }
         composable(gameRoute) {
-            GameScreen()
+            GameScreen(onNavigateUp = { navController.navigateUp() })
         }
-        composable(settingsRoute) {
-            SettingsScreen()
+        composable(instructionsRoute) {
+            InstructionsScreen(onNavigateUp = { navController.navigateUp() })
         }
     }
-}
-
-enum class Destinations {
-    Home,
-    Settings,
-    Game,
 }

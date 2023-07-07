@@ -1,4 +1,4 @@
-package com.machado001.hangman.ui.screens
+package com.machado001.hangman.ui.screens.gameScreen
 
 
 data class GameUiState(
@@ -12,6 +12,6 @@ data class GameUiState(
     val streakCount: Int = 0
 )
 
-val alphabetSet = "QWERTYUIOPASDFGHJKLZXCVBNM".toSet()
+val alphabetSet = ('A'..'Z').toSet()
 
 

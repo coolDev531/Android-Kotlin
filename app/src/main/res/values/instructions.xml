@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="INSTRUCTIONS">
+        <item>Guess the randomly chosen word.</item>
+        <item>The color of the letters will indicate if you guessed correctly or not.</item>
+        <item>Lose a heart when you guess a wrong letter.</item>
+        <item>If you\'re in portrait mode (vertical), drag the word area to see the rest of it if it\'s too long.</item>
+        <item>Or, if you prefer, play in landscape mode (horizontal).</item>
+    </string-array>
+</resources>

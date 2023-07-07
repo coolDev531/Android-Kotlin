@@ -1,10 +1,9 @@
 package com.machado001.hangman
 
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.isRoot
 import androidx.compose.ui.test.junit4.createComposeRule
-import com.machado001.hangman.ui.screens.GameScreen
+import com.machado001.hangman.ui.screens.gameScreen.GameScreen
 
 import org.junit.Test
 import org.junit.Rule
@@ -22,7 +21,7 @@ class GameScreenTest {
     @Test
     fun gameScreen_ContentIsDisplayed() {
         composeTestRule.setContent {
-            GameScreen()
+            GameScreen(onNavigateUp = {})
         }
         composeTestRule.onNode(hasAnyChild(isRoot()))
     }
