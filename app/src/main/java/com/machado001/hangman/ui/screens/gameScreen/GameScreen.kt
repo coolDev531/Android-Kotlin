@@ -57,14 +57,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.machado001.hangman.R
 import com.machado001.hangman.ui.components.dialogs.BackToHomeDialog
 import com.machado001.hangman.ui.components.dialogs.GameOverDialog
-import com.machado001.hangman.ui.theme.HangmanTheme
+import com.machado001.hangman.util.StringUtil
 import java.text.Normalizer
 
 @Composable
@@ -102,45 +101,12 @@ private fun GameContent(
     winCount: Int,
     onNavigateUp: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceEvenly
-    ) {
+    val isWordCorrectlyGuessed: Boolean =
+        StringUtil.isWordCorrectlyGuessed(wordChosen, correctLetters)
 
-        LivesLeftRow(
-            livesCount
-        )
-
-        Column(modifier = Modifier.fillMaxWidth()) {
-            ChosenWordFlowRow(
-                wordChosen,
-                correctLetters
-            )
-
-            TipAndCountTextRow(tip = category, winCount)
-
-
-            KeyboardLayout(
-                alphabetList = alphabetSet.toList(),
-                checkUserGuess = { ignoredCheckUserGuess(it) },
-                correctLetters = correctLetters,
-                usedLetters = usedLetters,
-            )
-        }
-
+    if (isWordCorrectlyGuessed) {
+        resetGame()
     }
-    val isWordCorrectlyGuessed = wordChosen?.run {
-        val wordWithoutWhitespaces = this.filterNot { it.isWhitespace() || it == '-' }
-        // Normalize the word: remove diacritics and convert to ASCII
-        val regex = "[^\\p{ASCII}]".toRegex()
-        val normalizedWord =
-            Normalizer.normalize(wordWithoutWhitespaces, Normalizer.Form.NFD).replace(regex, "")
-
-        correctLetters.containsAll(normalizedWord.toList())
-    } == true
-
     if (isGameOver) {
         GameOverDialog(
             resetGame = resetGame,
@@ -148,14 +114,30 @@ private fun GameContent(
             hitsCount = winCount
         )
     }
-
-
-    if (isWordCorrectlyGuessed) {
-        resetGame()
-    }
-
     BackToHomeDialog(onNavigateUp)
-
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+        LivesLeftRow(
+            livesCount
+        )
+        Column(modifier = Modifier.fillMaxWidth()) {
+            ChosenWordFlowRow(
+                wordChosen,
+                correctLetters
+            )
+            TipAndCountTextRow(tip = category, winCount)
+            KeyboardLayout(
+                alphabetList = alphabetSet.toList(),
+                checkUserGuess = { ignoredCheckUserGuess(it) },
+                correctLetters = correctLetters,
+                usedLetters = usedLetters,
+            )
+        }
+    }
 }
 
 @Composable
