@@ -2,6 +2,7 @@ package com.machado001.hangman.ui.screens.gameScreen
 
 import androidx.lifecycle.ViewModel
 import com.machado001.hangman.data.allWords
+import com.machado001.hangman.util.StringUtil
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -76,6 +77,13 @@ class GameScreenViewModel : ViewModel() {
         }
     }
 
+    fun isWordCorrectlyGuessed(wordChosen: String? = word, correctLetters: Set<Char>) =
+        wordChosen?.run {
+            val wordWithoutWhitespaces = StringUtil.removeWhitespacesAndHyphens(this)
+            val normalizedWord = StringUtil.normalizeWord(wordWithoutWhitespaces)
+            correctLetters.containsAll(normalizedWord.toList())
+        } == true
+
     fun resetStates() {
         _currentStreakCount = if (!isGameOver) ++_currentStreakCount else 0
         _uiState.value = GameUiState(streakCount = _currentStreakCount)
@@ -85,6 +93,7 @@ class GameScreenViewModel : ViewModel() {
         _currentLetterGuessed = ' '
         pickRandomWordAndCategory()
     }
+
 }
 
 

@@ -78,12 +78,18 @@ fun GameScreen(
         wordChosen = gameUiState.wordRandomlyChosen,
         correctLetters = gameUiState.correctLetters,
         livesCount = gameUiState.livesLeft,
-        ignoredCheckUserGuess = { gameViewModel.checkUserGuess(it) },
+        checkUserGuess = { gameViewModel.checkUserGuess(it) },
         resetGame = { gameViewModel.resetStates() },
         isGameOver = gameViewModel.isGameOver,
         usedLetters = gameUiState.usedLetters,
         category = gameUiState.categoryRandomlyChosen,
         winCount = gameUiState.streakCount,
+        isWordCorrectlyGuessed = {
+            gameViewModel.isWordCorrectlyGuessed(
+                gameUiState.wordRandomlyChosen,
+                gameUiState.correctLetters
+            )
+        }
     )
 }
 
@@ -93,18 +99,17 @@ private fun GameContent(
     wordChosen: String?,
     correctLetters: Set<Char>,
     livesCount: Int,
-    ignoredCheckUserGuess: (Char) -> Unit,
+    checkUserGuess: (Char) -> Unit,
     resetGame: () -> Unit,
     isGameOver: Boolean,
     usedLetters: Set<Char>,
     category: String,
     winCount: Int,
     onNavigateUp: () -> Unit,
+    isWordCorrectlyGuessed: () -> Boolean
 ) {
-    val isWordCorrectlyGuessed: Boolean =
-        StringUtil.isWordCorrectlyGuessed(wordChosen, correctLetters)
 
-    if (isWordCorrectlyGuessed) {
+    if (isWordCorrectlyGuessed()) {
         resetGame()
     }
     if (isGameOver) {
@@ -132,7 +137,7 @@ private fun GameContent(
             TipAndCountTextRow(tip = category, winCount)
             KeyboardLayout(
                 alphabetList = alphabetSet.toList(),
-                checkUserGuess = { ignoredCheckUserGuess(it) },
+                checkUserGuess = { checkUserGuess(it) },
                 correctLetters = correctLetters,
                 usedLetters = usedLetters,
             )
