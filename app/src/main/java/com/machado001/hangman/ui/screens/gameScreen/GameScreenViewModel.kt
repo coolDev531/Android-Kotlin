@@ -85,7 +85,7 @@ class GameScreenViewModel : ViewModel() {
         } == true
 
     fun resetStates() {
-        _currentStreakCount = if (!isGameOver) ++_currentStreakCount else 0
+        _currentStreakCount = increaseStreakCount()
         _uiState.value = GameUiState(streakCount = _currentStreakCount)
         lettersGuessed.clear()
         correctLetters.clear()
@@ -93,6 +93,8 @@ class GameScreenViewModel : ViewModel() {
         _currentLetterGuessed = ' '
         pickRandomWordAndCategory()
     }
+
+    private fun increaseStreakCount() = if (!isGameOver) ++_currentStreakCount else 0
 
 }
 

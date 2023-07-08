@@ -93,7 +93,6 @@ fun GameScreen(
     )
 }
 
-
 @Composable
 private fun GameContent(
     wordChosen: String?,
@@ -166,11 +165,12 @@ private fun ChosenWordFlowRow(
         horizontalArrangement = Arrangement.Center
     ) {
         LazyRow {
-            items(wordChosen!!.length) { index ->
-                if (wordChosen[index].isWhitespace()) {
+            items(wordChosen!!.length) { letterIndex ->
+                val currentChar = wordChosen[letterIndex]
+                if (currentChar.isWhitespace()) {
                     Spacer(modifier = Modifier.padding(16.dp))
 
-                } else if (wordChosen[index] == '-') {
+                } else if (currentChar == '-') {
                     Text(
                         modifier = Modifier
                             .padding(1.2.dp)
@@ -182,7 +182,7 @@ private fun ChosenWordFlowRow(
                     )
                 } else {
                     WordLetter(
-                        letter = wordChosen[index],
+                        letter = currentChar,
                         correctLetters = correctLetters
                     )
                 }
