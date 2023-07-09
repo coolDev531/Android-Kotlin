@@ -21,7 +21,7 @@ class GameScreenTest {
     @Test
     fun gameScreen_ContentIsDisplayed() {
         composeTestRule.setContent {
-            GameScreen(onNavigateUp = {})
+            GameScreen(onNavigateUp = {}) { navController.popBackStack() }
         }
         composeTestRule.onNode(hasAnyChild(isRoot()))
     }

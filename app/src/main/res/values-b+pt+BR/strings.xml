@@ -17,4 +17,7 @@
     <string name="NO_TEXT">não</string>
     <string name="INSTRUCTIONS_TITLE">Instruções </string>
     <string name="GO_BACK_TEXT">Voltar</string>
+    <string name="DIALOG_TIP_TITLE">Dica</string>
+    <string name="DIALOG_TIP_TEXT">Se a palavra não couber na tela, você pode arrastar ela na horizontal ou jogar com o celular deitado!</string>
+    <string name="QUIT_HOME_TITLE">Sair do jogo?</string>
 </resources>

@@ -1,12 +1,15 @@
 package com.machado001.hangman.data
 
 
+import android.content.Context
 import android.content.res.Resources
+import com.machado001.hangman.R
+import com.machado001.hangman.ui.screens.gameScreen.GameScreenViewModel
 import java.util.Locale
 
 var localei: Locale = Resources.getSystem().configuration.locales.get(0)
 
-val portugueseWordsMap = mapOf(
+val portugueseWordsMap: Map<String, Set<String>> = mapOf(
     "fruta" to setOf(
         "maçã",
         "banana",
@@ -656,7 +659,7 @@ val portugueseWordsMap = mapOf(
         "preocupado"
     )
 )
-val englishWordsMap = mapOf(
+val englishWordsMap: Map<String, Set<String>> = mapOf(
     "fruit" to setOf(
         "apple",
         "banana",
@@ -1292,4 +1295,3 @@ val allWords: Map<String, Set<String>> = if (localei.language == "en") {
 } else {
     portugueseWordsMap
 }
-

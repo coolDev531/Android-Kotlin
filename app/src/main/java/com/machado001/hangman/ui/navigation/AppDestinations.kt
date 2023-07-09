@@ -1,6 +1,6 @@
 package com.machado001.hangman.ui.navigation
 
-enum class AppDestinations {
+internal enum class AppDestinations {
     Home,
     Instructions,
     Game,

@@ -1,4 +1,4 @@
-package com.machado001.hangman.ui.components.dialogs
+package com.machado001.hangman.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.icons.Icons
@@ -11,16 +11,13 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.sp
 import com.machado001.hangman.R
 
-
 @Composable
-fun BackToHomeDialog(onNavigateUp: () -> Unit = {}, onPopBack: () -> Boolean = { false }) {
-    val openDialog = rememberSaveable{ mutableStateOf(false) }
+fun LeaveGameDialog(finishActivity: () -> Unit = {}) {
+    val openDialog = rememberSaveable { mutableStateOf(false) }
 
     BackHandler(onBack = { openDialog.value = true })
 
@@ -34,15 +31,9 @@ fun BackToHomeDialog(onNavigateUp: () -> Unit = {}, onPopBack: () -> Boolean = {
                     tint = MaterialTheme.colorScheme.primary
                 )
             },
-            title = { Text(stringResource(id = R.string.QUIT_GAME_CONFIRMATION_TEXT_TITLE).uppercase()) },
-            text = {
-                Text(
-                    stringResource(id = R.string.QUIT_GAME_CONFIRMATION_TEXT_DESCRIPTION),
-                    fontSize = 16.sp
-                )
-            },
+            title = { Text(stringResource(id = R.string.QUIT_HOME_TITLE).uppercase()) },
             confirmButton = {
-                Button(onClick = { onNavigateUp() }) {
+                Button(onClick = finishActivity) {
                     Text(stringResource(id = R.string.YES_TEXT))
                 }
             },

@@ -34,11 +34,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
@@ -51,29 +54,36 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.machado001.hangman.R
 import com.machado001.hangman.ui.components.dialogs.BackToHomeDialog
+import com.machado001.hangman.ui.components.dialogs.TipDialog
 import com.machado001.hangman.ui.components.dialogs.GameOverDialog
-import com.machado001.hangman.util.StringUtil
+import com.machado001.hangman.ui.theme.HangmanTheme
 import java.text.Normalizer
 
 @Composable
 fun GameScreen(
     gameViewModel: GameScreenViewModel = viewModel(),
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
+    onPopBack: () -> Boolean
 ) {
     val gameUiState by gameViewModel.uiState.collectAsState()
 
     GameContent(
+        onPopBack = onPopBack,
         onNavigateUp = onNavigateUp,
         wordChosen = gameUiState.wordRandomlyChosen,
         correctLetters = gameUiState.correctLetters,
@@ -105,7 +115,8 @@ private fun GameContent(
     category: String,
     winCount: Int,
     onNavigateUp: () -> Unit,
-    isWordCorrectlyGuessed: () -> Boolean
+    isWordCorrectlyGuessed: () -> Boolean,
+    onPopBack: () -> Boolean
 ) {
 
     if (isWordCorrectlyGuessed()) {
@@ -123,13 +134,13 @@ private fun GameContent(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceEvenly
     ) {
+        TopAppBarRow(modifier = Modifier, onNavigateUp, onPopBack)
         LivesLeftRow(
             livesCount
         )
         Column(modifier = Modifier.fillMaxWidth()) {
-            ChosenWordFlowRow(
+            ChosenWordRow(
                 wordChosen,
                 correctLetters
             )
@@ -151,7 +162,7 @@ fun materialColor(): Color {
 
 
 @Composable
-private fun ChosenWordFlowRow(
+private fun ChosenWordRow(
     wordChosen: String?,
     correctLetters: Set<Char>,
 ) {
@@ -344,6 +355,80 @@ private fun KeyboardLayout(
         }
     }
 }
+
+
+@Composable
+fun IconRow(
+    modifier: Modifier = Modifier,
+    OrientationInsideRow: Arrangement.Horizontal,
+    onClick: () -> Unit,
+    imageVector: ImageVector,
+    IconContentDescription: String? = null
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = OrientationInsideRow
+    ) {
+        IconButton(
+            onClick = onClick
+        ) {
+            Icon(
+                imageVector = imageVector,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(40.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun TopAppBarRow(
+    modifier: Modifier = Modifier,
+    onNavigateUp: () -> Unit,
+    onPopBack: () -> Boolean
+) {
+    var showActionFromBackIcon by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var showActionFromInfoIcon by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    if (showActionFromInfoIcon) {
+        TipDialog {
+            showActionFromInfoIcon = false
+        }
+    }
+
+
+    Row(modifier = modifier.fillMaxWidth()) {
+        val modifierWeightValue = modifier
+            .weight(0.5f)
+        IconRow(
+            modifier = modifierWeightValue,
+            OrientationInsideRow = Arrangement.Start,
+            onClick = { onPopBack() },
+            imageVector = Icons.Rounded.ArrowBack,
+        )
+        IconRow(
+            modifier = modifierWeightValue,
+            OrientationInsideRow = Arrangement.End,
+            onClick = { showActionFromInfoIcon = true },
+            imageVector = Icons.Rounded.Info,
+
+            )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BackIconButtonPreview() {
+    HangmanTheme {
+        TopAppBarRow(onNavigateUp = {}) { true }
+    }
+}
+
 
 enum class ButtonState { Correct, Incorrect }
 

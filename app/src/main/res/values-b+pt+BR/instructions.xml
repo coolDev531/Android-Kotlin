@@ -4,7 +4,7 @@
         <item>Adivinhe a palavra escolhida aleatoriamente.</item>
         <item>A cor das letras mostra se você acertou ou não.</item>
         <item>Ao errar a letra, você perde um coração.</item>
-        <item>Se estiver no modo retrato (celular de pé), arraste a região da palavra para ver o resto dela, se ela for muito grande.</item>
+        <item>Se estiver no modo retrato <b>(celular de pé)</b>, arraste a região da palavra para ver o resto dela, se ela for muito grande.</item>
         <item>Ou se preferir, jogue no modo paisagem (celular deitado).</item>
     </string-array>
 </resources>

@@ -15,6 +15,9 @@
     <string name="NO_TEXT">no</string>
     <string name="INSTRUCTIONS_TITLE">Instructions </string>
     <string name="GO_BACK_TEXT">Return</string>
+    <string name="DIALOG_TIP_TITLE">Tip</string>
+    <string name="DIALOG_TIP_TEXT">If the word doesn\'t fit on the screen, you can drag it horizontally or play in landscape mode!</string>
+    <string name="QUIT_HOME_TITLE">Leave game?</string>
 
 
 </resources>
