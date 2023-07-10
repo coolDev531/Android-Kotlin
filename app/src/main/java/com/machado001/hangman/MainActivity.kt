@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.machado001.hangman.ui.navigation.MyAppNavHost
+import com.machado001.hangman.ui.navigation.AppNavHost
 import com.machado001.hangman.ui.theme.HangmanTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MyAppNavHost(activity = this)
+                    AppNavHost(activity = this)
                 }
             }
         }
